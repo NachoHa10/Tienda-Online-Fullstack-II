@@ -160,38 +160,55 @@
     </div>
   </main>
 
-  <!-- MODAL DE PASARELA DE PAGO -->
+ <!-- MODAL DE PASARELA DE PAGO CON MENSAJES DE ERROR VISIBLES -->
   <div class="modal fade" id="paymentModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0 shadow">
+        
         <div class="modal-header" style="background-color: var(--color-blue-dark); color: white;">
-          <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock me-2" style="color: var(--color-yellow);"></i>Pasarela de Pago Segura</h5>
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-shield-lock me-2" style="color: var(--color-yellow);"></i>Pasarela de Pago Segura
+          </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
+
         <div class="modal-body p-4">
           <form id="payment-form" novalidate>
             <div class="alert alert-light border p-2 small mb-3">
-              <i class="bi bi-lock-fill text-success me-1"></i> Transacción protegida. Ingrese los datos de su tarjeta para completar la orden por <strong id="modal-total-display" style="color: var(--color-blue-dark);">$17.480</strong>.
+              <i class="bi bi-lock-fill text-success me-1"></i> Transacción protegida por un total de <strong id="modal-total-display" style="color: var(--color-blue-dark);">$17.480</strong>.
             </div>
 
+            <!-- NÚMERO DE TARJETA -->
             <div class="mb-3">
               <label for="card-number" class="form-label small fw-semibold">Número de Tarjeta <span class="text-danger">*</span></label>
               <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" required>
+              <!-- CONTENEDOR DE ERROR -->
+              <div id="card-number-error" class="error-msg d-none"></div>
             </div>
 
+            <!-- NOMBRE TITULAR -->
             <div class="mb-3">
               <label for="card-holder" class="form-label small fw-semibold">Nombre del Titular <span class="text-danger">*</span></label>
               <input type="text" id="card-holder" class="form-control" placeholder="Ej: JUAN PEREZ GONZALEZ" required>
+              <!-- CONTENEDOR DE ERROR -->
+              <div id="card-holder-error" class="error-msg d-none"></div>
             </div>
 
             <div class="row mb-3">
+              <!-- EXPIRACIÓN -->
               <div class="col-6">
                 <label for="card-exp" class="form-label small fw-semibold">Expiración (MM/AA) <span class="text-danger">*</span></label>
                 <input type="text" id="card-exp" class="form-control" placeholder="12/28" maxlength="5" required>
+                <!-- CONTENEDOR DE ERROR -->
+                <div id="card-exp-error" class="error-msg d-none"></div>
               </div>
+
+              <!-- CVC / CVV -->
               <div class="col-6">
                 <label for="card-cvc" class="form-label small fw-semibold">CVC / CVV <span class="text-danger">*</span></label>
                 <input type="password" id="card-cvc" class="form-control" placeholder="123" maxlength="4" required>
+                <!-- CONTENEDOR DE ERROR -->
+                <div id="card-cvc-error" class="error-msg d-none"></div>
               </div>
             </div>
 
@@ -200,6 +217,7 @@
             </button>
           </form>
         </div>
+
       </div>
     </div>
   </div>
