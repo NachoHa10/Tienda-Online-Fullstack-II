@@ -55,35 +55,19 @@ function updateCartTotals() {
 }
 
 /* --------------------------------------------------------------------------
-   2. VALIDACIONES DE TARJETA Y FECHA DE EXPIRACIÓN (ALGORITMO DE LUHN)
+   2. VALIDACIONES DE TARJETA FICTICIA/PRUEBA Y FECHA DE EXPIRACIÓN
    -------------------------------------------------------------------------- */
 
-// Algoritmo de Luhn para verificar tarjetas reales de 13 a 19 dígitos
-function isValidLuhn(cardNumber) {
+// Validar tarjetas numéricas de 13 a 19 dígitos (Acepta números ficticios o de prueba)
+function isValidCreditCard(cardNumber) {
+  if (!cardNumber) return false;
   let cleanNum = cardNumber.replace(/\D/g, '');
-  if (cleanNum.length < 13 || cleanNum.length > 19) return false;
-
-  let sum = 0;
-  let shouldDouble = false;
-
-  for (let i = cleanNum.length - 1; i >= 0; i--) {
-    let digit = parseInt(cleanNum.charAt(i));
-
-    if (shouldDouble) {
-      digit *= 2;
-      if (digit > 9) digit -= 9;
-    }
-
-    sum += digit;
-    shouldDouble = !shouldDouble;
-  }
-
-  return (sum % 10) === 0;
+  return cleanNum.length >= 13 && cleanNum.length <= 19;
 }
 
 // Validar que la fecha MM/AA NO esté vencida
 function isFutureCardDate(expString) {
-  if (!/^\d{2}\/\d{2}$/.test(expString.trim())) return false;
+  if (!expString || !/^\d{2}\/\d{2}$/.test(expString.trim())) return false;
 
   const parts = expString.split('/');
   const month = parseInt(parts[0], 10);
@@ -101,23 +85,32 @@ function isFutureCardDate(expString) {
   return true;
 }
 
+// Función para mostrar/ocultar estado de validación y mensajes explicativos
 function setFieldStatus(inputElement, isValid, errorMessage = '') {
   if (!inputElement) return;
-  const errorContainer = document.getElementById(`${inputElement.id}-error`);
+
+  let errorContainer = document.getElementById(`${inputElement.id}-error`);
+
+  // Si no existe el div con ID específico, buscamos o creamos una clase feedback
+  if (!errorContainer) {
+    errorContainer = inputElement.parentNode.querySelector('.error-msg');
+    if (!errorContainer) {
+      errorContainer = document.createElement('div');
+      errorContainer.className = 'error-msg';
+      inputElement.parentNode.appendChild(errorContainer);
+    }
+  }
+
   if (isValid) {
     inputElement.classList.remove('is-invalid');
     inputElement.classList.add('is-valid');
-    if (errorContainer) {
-      errorContainer.textContent = '';
-      errorContainer.classList.add('d-none');
-    }
+    errorContainer.textContent = '';
+    errorContainer.classList.add('d-none');
   } else {
     inputElement.classList.remove('is-valid');
     inputElement.classList.add('is-invalid');
-    if (errorContainer) {
-      errorContainer.textContent = errorMessage;
-      errorContainer.classList.remove('d-none');
-    }
+    errorContainer.textContent = errorMessage;
+    errorContainer.classList.remove('d-none');
   }
 }
 
@@ -171,9 +164,9 @@ function initCheckoutForm() {
       const cardExp = document.getElementById('card-exp');
       const cardCvc = document.getElementById('card-cvc');
 
-      // Validar Número de Tarjeta con Luhn
-      if (!cardNum || !isValidLuhn(cardNum.value)) {
-        setFieldStatus(cardNum, false, 'Número de tarjeta inválido (falla de verificación).');
+      // Validar Número de Tarjeta (Acepta tarjetas ficticias)
+      if (!cardNum || !isValidCreditCard(cardNum.value)) {
+        setFieldStatus(cardNum, false, 'Ingrese entre 13 y 19 dígitos numéricos.');
         cardValid = false;
       } else { setFieldStatus(cardNum, true); }
 
