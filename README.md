@@ -1,2 +1,5 @@
-##Usuario / Email: admin@sensoritoys.cl
-##Contraseña: admin123
+# Tienda-Online-Fullstack-II
+
+## Usuario / Email: admin@sensoritoys.cl
+
+## Contraseña: admin123
