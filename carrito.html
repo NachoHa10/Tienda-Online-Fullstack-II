@@ -8,26 +8,36 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/miestilo.css">
 </head>
 <body>
 
-  <!-- BARRA DE NAVEGACIÓN -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <!-- BARRA DE NAVEGACIÓN VISIBLE CON AZUL OSCURO (#16498C) Y LOGO AMARILLO (#F2EA79) -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-      <a class="navbar-brand text-primary fs-3" href="index.html">
-        <i class="bi bi-balloon-heart-fill text-warning me-2"></i>SensoriToys
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-balloon-heart-fill me-2" style="color: var(--color-yellow);"></i>SensoriToys
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button> 
+      
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Catálogo</a></li>
           <li class="nav-item"><a class="nav-link" href="pedidos.html">Mis Pedidos</a></li>
           <li class="nav-item"><a class="nav-link" href="reclamos.html">Reclamos y Reembolsos</a></li>
         </ul>
+        
         <div class="d-flex align-items-center gap-3">
-          <a href="login.html" class="btn-user-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar Sesión / Registro" aria-label="Iniciar Sesión o Registro">
+          <!-- BOTÓN CARRITO DESTACADO -->
+          <a href="carrito.html" class="btn btn-orange position-relative px-3">
+            <i class="bi bi-cart3 fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+          </a>
+          
+          <!-- BOTÓN DE USUARIO AMARILLO CIRCULAR (#F2EA79) -->
+          <a href="login.html" class="btn-user-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar Sesión / Registro">
             <i class="bi bi-person-fill fs-5"></i>
           </a>
         </div>
@@ -35,44 +45,63 @@
     </div>
   </nav>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <main class="container py-4">
-    <h1 class="fw-bold mb-4 h2"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Compras</h1>
-    <div class="row">
-      <div class="col-md-7 mb-3">
-        <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
-          <h2 class="h5 fw-bold mb-3">Productos Seleccionados</h2>
+    <div class="d-flex align-items-center mb-4">
+      <div class="rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center text-white" style="background-color: var(--color-blue-dark);">
+        <i class="bi bi-cart3 fs-3"></i>
+      </div>
+      <div>
+        <h1 class="h2 fw-bold mb-0" style="color: var(--color-blue-dark);">Mi Carrito de Compras</h1>
+        <p class="text-muted small mb-0">Revisa tus productos y completa los datos para el despacho</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- SECCIÓN PRODUCTOS SELECCIONADOS -->
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-3">
+          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">
+            <i class="bi bi-bag-check me-2" style="color: var(--color-blue-light);"></i>Productos Seleccionados
+          </h5>
           
-          <!-- ÍTEM DE PRODUCTO INTERACTIVO -->
-          <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <!-- ÍTEM DE PRODUCTO CON BORDES Y PRECIO DESTACADO -->
+          <div class="d-flex justify-content-between align-items-center p-3 rounded-3 border bg-light mb-3">
             <div>
-              <h3 class="h6 mb-0 fw-bold">Mordedor Sensorial Silicona</h3>
+              <h6 class="fw-bold mb-0 text-dark">Mordedor Sensorial Silicona</h6>
               <small class="text-muted">$6.990 c/u</small>
             </div>
-            <div class="d-flex align-items-center gap-2">
-              <input type="number" id="cart-item-qty" class="form-control form-control-sm" style="width:80px;" value="2" min="1" max="999">
-              <span id="cart-item-subtotal" class="fw-bold ms-2" style="min-width: 90px; text-align: right;">$13.980</span>
-              <button class="btn btn-sm btn-outline-danger ms-2" title="Eliminar del carrito"><i class="bi bi-trash"></i></button>
+            
+            <div class="d-flex align-items-center gap-3">
+              <input type="number" id="cart-item-qty" class="form-control form-control-sm text-center fw-bold" style="width: 70px;" value="2" min="1">
+              <span id="cart-item-subtotal" class="fw-bold fs-5" style="color: var(--color-blue-dark); min-width: 90px; text-align: right;">$13.980</span>
+              
+              <!-- BOTÓN ELIMINAR EN ROJO (#D93232) -->
+              <button class="btn btn-sm btn-outline-danger" title="Eliminar del carrito" style="background-color: var(--color-red) !important; color: white !important;">
+                <i class="bi bi-trash-fill"></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="col-md-5">
-        <div class="card border-0 shadow-sm rounded-4 p-3">
-          <h2 class="h5 fw-bold mb-3">Dirección de Envío y Pago</h2>
+      <!-- SECCIÓN RESUMEN Y ENVÍO -->
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">
+            <i class="bi bi-geo-alt me-2" style="color: var(--color-blue-light);"></i>Dirección de Envío y Pago
+          </h5>
           
           <form id="checkout-form" novalidate>
             <div class="mb-2">
               <label for="ship-street" class="form-label small fw-semibold">Calle <span class="text-danger">*</span></label>
               <input type="text" id="ship-street" class="form-control form-control-sm" placeholder="Ej: Av. Las Flores" required>
-              <div id="ship-street-error" class="invalid-feedback d-none"></div>
             </div>
 
             <div class="row mb-2">
               <div class="col-6">
                 <label for="ship-number" class="form-label small fw-semibold">Número <span class="text-danger">*</span></label>
                 <input type="text" id="ship-number" class="form-control form-control-sm" placeholder="Ej: 1234" required>
-                <div id="ship-number-error" class="invalid-feedback d-none"></div>
               </div>
               <div class="col-6">
                 <label for="ship-housing" class="form-label small fw-semibold">Tipo Vivienda <span class="text-danger">*</span></label>
@@ -81,7 +110,6 @@
                   <option value="Casa">Casa</option>
                   <option value="Departamento">Departamento</option>
                 </select>
-                <div id="ship-housing-error" class="invalid-feedback d-none"></div>
               </div>
             </div>
 
@@ -89,7 +117,6 @@
               <div class="col-6">
                 <label for="ship-city" class="form-label small fw-semibold">Ciudad <span class="text-danger">*</span></label>
                 <input type="text" id="ship-city" class="form-control form-control-sm" value="Concepción" required>
-                <div id="ship-city-error" class="invalid-feedback d-none"></div>
               </div>
               <div class="col-6">
                 <label for="ship-comuna" class="form-label small fw-semibold">Comuna <span class="text-danger">*</span></label>
@@ -100,78 +127,76 @@
                   <option value="Talcahuano">Talcahuano</option>
                   <option value="Chiguayante">Chiguayante</option>
                 </select>
-                <div id="ship-comuna-error" class="invalid-feedback d-none"></div>
               </div>
             </div>
 
             <div class="mb-3">
               <label for="ship-phone" class="form-label small fw-semibold">Teléfono de Contacto <span class="text-danger">*</span></label>
               <input type="tel" id="ship-phone" class="form-control form-control-sm" value="+56912345678" placeholder="+569XXXXXXXX" required>
-              <div id="ship-phone-error" class="invalid-feedback d-none"></div>
             </div>
 
-            <hr>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Subtotal:</span>
+            <hr class="my-3">
+            
+            <div class="d-flex justify-content-between mb-2 small">
+              <span class="text-muted">Subtotal:</span>
               <span id="summary-subtotal" class="fw-bold">$13.980</span>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Despacho:</span>
+            <div class="d-flex justify-content-between mb-2 small">
+              <span class="text-muted">Despacho:</span>
               <span>$3.500</span>
             </div>
             <div class="d-flex justify-content-between mb-3 fw-bold fs-5">
               <span>Total a Pagar:</span>
-              <span id="summary-total" class="text-primary">$17.480</span>
+              <span id="summary-total" style="color: var(--color-blue-dark);">$17.480</span>
             </div>
 
-            <button type="submit" class="btn btn-pastel-primary w-100 py-2 fw-bold">Proceder al Pago</button>
+            <!-- BOTÓN PRINCIPAL LLAMATIVO NARANJA (#F2845C) -->
+            <button type="submit" class="btn btn-orange w-100 py-3 fs-6 fw-bold">
+              <i class="bi bi-credit-card me-2"></i>Proceder al Pago
+            </button>
           </form>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- MODAL OBLIGATORIO DE DATOS DE TARJETA / PASARELA DE PAGO -->
-  <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <!-- MODAL DE PASARELA DE PAGO -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0 shadow">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold"><i class="bi bi-credit-card-2-front text-primary me-2"></i>Pasarela de Pago Segura</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <div class="modal-header" style="background-color: var(--color-blue-dark); color: white;">
+          <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock me-2" style="color: var(--color-yellow);"></i>Pasarela de Pago Segura</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-4">
           <form id="payment-form" novalidate>
-            <div class="alert alert-light border border-info p-2 small mb-3">
-              <i class="bi bi-lock-fill text-success me-1"></i> Transacción protegida. Ingrese los datos de su tarjeta para completar la orden por <strong id="modal-total-display">$17.480</strong>.
+            <div class="alert alert-light border p-2 small mb-3">
+              <i class="bi bi-lock-fill text-success me-1"></i> Transacción protegida. Ingrese los datos de su tarjeta para completar la orden por <strong id="modal-total-display" style="color: var(--color-blue-dark);">$17.480</strong>.
             </div>
 
             <div class="mb-3">
               <label for="card-number" class="form-label small fw-semibold">Número de Tarjeta <span class="text-danger">*</span></label>
               <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" required>
-              <div id="card-number-error" class="invalid-feedback d-none"></div>
             </div>
 
             <div class="mb-3">
               <label for="card-holder" class="form-label small fw-semibold">Nombre del Titular <span class="text-danger">*</span></label>
               <input type="text" id="card-holder" class="form-control" placeholder="Ej: JUAN PEREZ GONZALEZ" required>
-              <div id="card-holder-error" class="invalid-feedback d-none"></div>
             </div>
 
             <div class="row mb-3">
               <div class="col-6">
                 <label for="card-exp" class="form-label small fw-semibold">Expiración (MM/AA) <span class="text-danger">*</span></label>
                 <input type="text" id="card-exp" class="form-control" placeholder="12/28" maxlength="5" required>
-                <div id="card-exp-error" class="invalid-feedback d-none"></div>
               </div>
               <div class="col-6">
                 <label for="card-cvc" class="form-label small fw-semibold">CVC / CVV <span class="text-danger">*</span></label>
                 <input type="password" id="card-cvc" class="form-control" placeholder="123" maxlength="4" required>
-                <div id="card-cvc-error" class="invalid-feedback d-none"></div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-success w-100 py-2 fs-6 fw-bold">
-              <i class="bi bi-shield-check me-1"></i> Autorizar Pago
+            <button type="submit" class="btn btn-orange w-100 py-3 fs-6 fw-bold">
+              <i class="bi bi-shield-check me-2"></i>Autorizar Pago
             </button>
           </form>
         </div>

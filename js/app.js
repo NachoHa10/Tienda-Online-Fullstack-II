@@ -1,5 +1,5 @@
 /* ==========================================================================
-   APP.JS - LÓGICA CON VALIDACIÓN DE LUHN, EXPIRACIÓN REAL Y TOOLTIPS
+   APP.JS - LÓGICA COMPLETA DE VALIDACIONES, PASARELA Y DASHBOARD DE GRÁFICOS
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. CALCULADORA DINÁMICA DE CARRITO
+   1. CALCULADORA DINÁMICA DE PRECIOS Y CANTIDAD
    -------------------------------------------------------------------------- */
 const UNIT_PRICE = 6990;
 const SHIPPING_COST = 3500;
@@ -24,8 +24,11 @@ function initCartCalculator() {
   const qtyInput = document.getElementById('cart-item-qty');
   if (!qtyInput) return;
 
+  // Escuchar cualquier cambio en vivo (tecleo o flechas)
   qtyInput.addEventListener('input', updateCartTotals);
   qtyInput.addEventListener('change', updateCartTotals);
+  
+  // Calcular valores iniciales
   updateCartTotals();
 }
 
@@ -39,6 +42,7 @@ function updateCartTotals() {
   const subtotal = qty * UNIT_PRICE;
   const total = subtotal + SHIPPING_COST;
 
+  // Actualizar la interfaz en tiempo real
   const itemSubtotalEl = document.getElementById('cart-item-subtotal');
   const summarySubtotalEl = document.getElementById('summary-subtotal');
   const summaryTotalEl = document.getElementById('summary-total');
@@ -54,7 +58,7 @@ function updateCartTotals() {
    2. VALIDACIONES DE TARJETA Y FECHA DE EXPIRACIÓN (ALGORITMO DE LUHN)
    -------------------------------------------------------------------------- */
 
-// Algoritmo de Luhn para número de tarjeta válido
+// Algoritmo de Luhn para verificar tarjetas reales de 13 a 19 dígitos
 function isValidLuhn(cardNumber) {
   let cleanNum = cardNumber.replace(/\D/g, '');
   if (cleanNum.length < 13 || cleanNum.length > 19) return false;
@@ -77,7 +81,7 @@ function isValidLuhn(cardNumber) {
   return (sum % 10) === 0;
 }
 
-// Validar que la fecha de expiración NO esté vencida
+// Validar que la fecha MM/AA NO esté vencida
 function isFutureCardDate(expString) {
   if (!/^\d{2}\/\d{2}$/.test(expString.trim())) return false;
 
@@ -118,7 +122,7 @@ function setFieldStatus(inputElement, isValid, errorMessage = '') {
 }
 
 /* --------------------------------------------------------------------------
-   3. CHECKOUT Y PASARELA DE PAGO
+   3. CHECKOUT DE ENVÍO Y PASARELA DE PAGO
    -------------------------------------------------------------------------- */
 function initCheckoutForm() {
   const checkoutForm = document.getElementById('checkout-form');
@@ -126,6 +130,7 @@ function initCheckoutForm() {
 
   if (!checkoutForm) return;
 
+  // Paso 1: Validar formulario de envío y abrir modal de pago
   checkoutForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let valid = true;
@@ -155,6 +160,7 @@ function initCheckoutForm() {
     }
   });
 
+  // Paso 2: Validar la tarjeta en el modal de pago
   if (paymentForm) {
     paymentForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -183,7 +189,7 @@ function initCheckoutForm() {
         cardValid = false;
       } else { setFieldStatus(cardExp, true); }
 
-      // Validar CVC (3 a 4 dígitos)
+      // Validar CVC
       if (!cardCvc || !/^\d{3,4}$/.test(cardCvc.value.trim())) {
         setFieldStatus(cardCvc, false, 'CVC inválido (debe tener 3 o 4 números).');
         cardValid = false;
@@ -230,7 +236,7 @@ function recordPurchaseToAdmin() {
 }
 
 /* --------------------------------------------------------------------------
-   4. INICIO DE SESIÓN Y REGISTRO
+   4. INICIO DE SESIÓN Y REGISTRO (RUT MÓDULO 11 & CORREO)
    -------------------------------------------------------------------------- */
 function isValidEmail(email) {
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(String(email).toLowerCase());
@@ -366,7 +372,7 @@ function initLoginForm() {
 }
 
 /* --------------------------------------------------------------------------
-   5. DASHBOARD ADMINISTRATIVO Y GRÁFICOS
+   5. DASHBOARD ADMINISTRATIVO Y GRÁFICOS CON LA NUEVA PALETA
    -------------------------------------------------------------------------- */
 function initAdminDashboard() {
   const statIncome = document.getElementById('stat-income');
@@ -414,6 +420,7 @@ function initAdminDashboard() {
 function renderAdminCharts(salesData) {
   if (typeof Chart === 'undefined') return;
 
+  // Limpiar instancias previas para evitar superposiciones
   ['chartSalesTimeline', 'chartCategories', 'chartTopProducts', 'chartPaymentMethods'].forEach(id => {
     const canvas = document.getElementById(id);
     if (canvas) {
@@ -422,6 +429,7 @@ function renderAdminCharts(salesData) {
     }
   });
 
+  // 1. Evolución de Ventas (Línea) - Azul Oscuro (#16498C) y Área Azul Claro (#5F94D9)
   const ctx1 = document.getElementById('chartSalesTimeline');
   if (ctx1) {
     new Chart(ctx1, {
@@ -430,17 +438,20 @@ function renderAdminCharts(salesData) {
         labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4 (Hoy)'],
         datasets: [{
           label: 'Ingresos ($)',
-          data: [35000, 48000, 62000, salesData.totalRevenue],
-          borderColor: '#7bc9ff',
-          backgroundColor: 'rgba(123, 201, 255, 0.25)',
+          data: [35000, 48000, 62000, salesData.totalRevenue || 1679320],
+          borderColor: '#16498C',
+          backgroundColor: 'rgba(95, 148, 217, 0.25)',
           fill: true,
-          tension: 0.3
+          tension: 0.35,
+          pointBackgroundColor: '#16498C',
+          pointRadius: 5
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
+  // 2. Ventas por Categoría (Doughnut) - Paleta Oficial: Azul Claro (#5F94D9), Amarillo (#F2EA79), Naranja (#F2845C)
   const ctx2 = document.getElementById('chartCategories');
   if (ctx2) {
     new Chart(ctx2, {
@@ -449,32 +460,37 @@ function renderAdminCharts(salesData) {
         labels: ['Estimulación Táctil', 'Lámparas/Visual', 'Motricidad Fina'],
         datasets: [{
           data: [55, 35, 10],
-          backgroundColor: ['#a8e6cf', '#9bd3dd', '#ffd3b6']
+          backgroundColor: ['#5F94D9', '#F2EA79', '#F2845C'],
+          borderWidth: 2,
+          borderColor: '#FFFFFF'
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
+  // 3. Top Productos (Barras Horizontales) - Azul Claro (#5F94D9) y Naranja (#F2845C)
   const ctx3 = document.getElementById('chartTopProducts');
   if (ctx3) {
-    const prodNames = Object.keys(salesData.products);
+    const prodNames = Object.keys(salesData.products || {});
     const prodQtys = prodNames.map(k => salesData.products[k].qty);
 
     new Chart(ctx3, {
       type: 'bar',
       data: {
-        labels: prodNames,
+        labels: prodNames.length ? prodNames : ['Mordedor Sensorial', 'Lámpara Burbujas'],
         datasets: [{
           label: 'Unidades Vendidas',
-          data: prodQtys,
-          backgroundColor: ['#7bc9ff', '#9bd3dd']
+          data: prodQtys.length ? prodQtys : [180, 50],
+          backgroundColor: ['#5F94D9', '#F2845C'],
+          borderRadius: 8
         }]
       },
       options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
     });
   }
 
+  // 4. Medios de Pago (Barras Verticales) - Naranja (#F2845C) y Azul Oscuro (#16498C)
   const ctx4 = document.getElementById('chartPaymentMethods');
   if (ctx4) {
     new Chart(ctx4, {
@@ -483,8 +499,9 @@ function renderAdminCharts(salesData) {
         labels: ['Tarjeta Débito/Crédito', 'Transferencia Bancaria'],
         datasets: [{
           label: 'Transacciones',
-          data: [10, 4],
-          backgroundColor: ['#ffaaa5', '#d4a5d9']
+          data: [18, 6],
+          backgroundColor: ['#F2845C', '#16498C'],
+          borderRadius: 8
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }

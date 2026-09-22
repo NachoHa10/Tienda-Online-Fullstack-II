@@ -1,89 +1,168 @@
-/* PALETA DE COLORES SUAVES / JUGUETES SENSORIALES */
+/* ==========================================================================
+   PALETA OFICIAL APLICADA SEGÚN USABILIDAD DE NIELSEN
+   ========================================================================== */
 :root {
-  --pastel-mint: #a8e6cf;
-  --pastel-pink: #ffd3b6;
-  --pastel-lavender: #d4a5d9;
-  --pastel-blue: #9bd3dd;
-  --pastel-yellow: #ffaaa5;
-  --soft-bg: #fdfbf7;
-  --dark-text: #4a4a4a;
-  --border-radius-custom: 18px;
+  --color-blue-dark:   #16498C; /* Azul Oscuro - Headers, Navbars, Títulos */
+  --color-blue-light:  #5F94D9; /* Azul Claro - Botones secundarios, Bordes */
+  --color-yellow:      #F2EA79; /* Amarillo - Acentos visuales, Badges */
+  --color-orange:      #F2845C; /* Naranja - Acción Principal / Call to Action */
+  --color-red:         #D93232; /* Rojo - Validaciones, Alertas, Eliminar */
+  
+  --bg-page:           #F0F4F8; /* Fondo gris-azul para contraste de superficie */
+  --bg-card:           #FFFFFF; /* Tarjeta blanca destacada */
+  --text-main:         #1E293B; /* Texto oscuro legible */
+  --border-radius-custom: 16px;
 }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: var(--soft-bg);
-  color: var(--dark-text);
+  background-color: var(--bg-page) !important;
+  color: var(--text-main);
+  min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, .navbar-brand {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Fredoka', cursive;
+  color: var(--color-blue-dark);
 }
 
-/* Navbar compacto sin deformaciones */
+/* --------------------------------------------------------------------------
+   NAVBAR & ENCABEZADOS GLOBAL
+   -------------------------------------------------------------------------- */
 .navbar {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  background-color: var(--color-blue-dark) !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  box-shadow: 0 4px 14px rgba(22, 73, 140, 0.2) !important;
 }
 
-/* Botón de usuario minimalista con ícono y hover sutil */
+.navbar-brand {
+  font-family: 'Fredoka', cursive;
+  color: #FFFFFF !important;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.navbar-brand i {
+  color: var(--color-yellow) !important;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover {
+  color: var(--color-yellow) !important;
+}
+
+/* Icono de Usuario en Navbar */
 .btn-user-icon {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #7bc9ff;
-  border: 2px solid #7bc9ff;
-  background-color: transparent;
-  transition: all 0.2s ease-in-out;
+  color: var(--color-blue-dark) !important;
+  border: 2px solid var(--color-yellow);
+  background-color: var(--color-yellow);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease-in-out;
+  text-decoration: none;
 }
 
 .btn-user-icon:hover {
-  background-color: #7bc9ff;
-  color: #ffffff;
-  transform: scale(1.05);
+  background-color: #FFFFFF;
+  color: var(--color-blue-dark) !important;
+  transform: scale(1.08);
 }
 
-/* Banner Principal */
-.bg-sensory {
-  background: linear-gradient(135deg, var(--pastel-mint) 0%, var(--pastel-blue) 100%);
+/* --------------------------------------------------------------------------
+   TARJETAS Y FORMULARIOS (CONTRASTE MEJORADO)
+   -------------------------------------------------------------------------- */
+.card-form, .card {
+  background-color: var(--bg-card) !important;
+  border-radius: var(--border-radius-custom);
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 10px 25px rgba(22, 73, 140, 0.08) !important;
 }
 
-/* Botones Personalizados */
-.btn-pastel-primary {
-  background-color: #7bc9ff;
-  color: #ffffff;
-  border: none;
+/* Pestañas de Login / Registro */
+.nav-pills .nav-link {
+  color: var(--color-blue-dark) !important;
+  font-weight: 700;
+  border-radius: 10px;
+  background-color: #E2E8F0;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--color-blue-dark) !important;
+  color: #FFFFFF !important;
+}
+
+/* Inputs con foco claro */
+.form-control, .form-select {
+  border: 1.5px solid #CBD5E1;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--color-blue-light);
+  box-shadow: 0 0 0 0.25rem rgba(95, 148, 217, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   BOTONES BASADOS EN JERARQUÍA DE NIELSEN
+   -------------------------------------------------------------------------- */
+/* Acción Principal (Naranja #F2845C) */
+.btn-orange, .btn-primary, .btn-pastel-primary {
+  background-color: var(--color-orange) !important;
+  border-color: var(--color-orange) !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(242, 132, 92, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-orange:hover, .btn-primary:hover, .btn-pastel-primary:hover {
+  background-color: #D86B43 !important;
+  border-color: #D86B43 !important;
+  transform: translateY(-1px);
+}
+
+/* Acción Secundaria / Navegación (Azul Claro #5F94D9) */
+.btn-blue-light, .btn-outline-secondary {
+  background-color: var(--color-blue-light) !important;
+  border-color: var(--color-blue-light) !important;
+  color: #FFFFFF !important;
   font-weight: 600;
   border-radius: 12px;
 }
 
-.btn-pastel-primary:hover {
-  background-color: #61b5f2;
-  color: #ffffff;
+.btn-blue-light:hover, .btn-outline-secondary:hover {
+  background-color: var(--color-blue-dark) !important;
+  border-color: var(--color-blue-dark) !important;
+  color: #FFFFFF !important;
 }
 
-/* Tarjetas y Contenedores */
+/* Tarjetas de Producto */
 .card-product {
-  border: none;
-  border-radius: var(--border-radius-custom);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card-product:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 28px rgba(22, 73, 140, 0.15) !important;
+  border-color: var(--color-blue-light) !important;
 }
 
-.admin-card {
-  background: #ffffff;
-  border-radius: var(--border-radius-custom);
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  padding: 1.5rem;
+.price-tag {
+  color: var(--color-blue-dark) !important;
+  font-size: 1.3rem;
+  font-weight: 800;
 }

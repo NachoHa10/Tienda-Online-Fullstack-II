@@ -8,126 +8,147 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/miestilo.css">
 </head>
 <body>
 
-  <!-- NAVEGACIÓN ADMIN -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR FIJA CON LA PALETA OFICIAL -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-      <a class="navbar-brand text-primary fs-3" href="index.html">
-        <i class="bi bi-balloon-heart-fill text-warning me-2"></i>SensoriToys
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-balloon-heart-fill me-2" style="color: var(--color-yellow);"></i>SensoriToys
       </a>
-      <a href="index.html" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-shop me-1"></i> Volver a la Tienda
-      </a>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-danger p-2 fs-6 d-none d-md-inline-block">
+          <i class="bi bi-shield-lock me-1"></i> Modo Administrador
+        </span>
+        <a href="index.html" class="btn btn-sm btn-blue-light">
+          <i class="bi bi-shop me-1"></i> Volver a la Tienda
+        </a>
+      </div>
     </div>
   </nav>
 
   <main class="container py-4">
+    <!-- ENCABEZADO DE SECCIÓN -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h1 class="h2 fw-bold mb-0"><i class="bi bi-speedometer2 me-2"></i>Dashboard de Ventas</h1>
+        <h1 class="h2 fw-bold mb-1" style="color: var(--color-blue-dark);">
+          <i class="bi bi-speedometer2 me-2" style="color: var(--color-blue-light);"></i>Dashboard de Ventas
+        </h1>
         <p class="text-muted small mb-0">Análisis métrico e indicadores clave de rendimiento (KPIs)</p>
       </div>
-      <span class="badge bg-danger p-2 fs-6"><i class="bi bi-shield-lock me-1"></i> Modo Administrador</span>
     </div>
 
-    <!-- PESTAÑAS DEL PANEL -->
-    <ul class="nav nav-tabs mb-4" id="adminTab" role="tablist">
+    <!-- PESTAÑAS ADMINISTRATIVAS -->
+    <ul class="nav nav-pills mb-4 gap-2" id="adminTab" role="tablist">
       <li class="nav-item">
-        <button class="nav-link active" id="dash-tab" data-bs-toggle="tab" data-bs-target="#admin-dashboard" type="button">Dashboard & Gráficos</button>
+        <button class="nav-link active px-4 py-2" id="dash-tab" data-bs-toggle="pill" data-bs-target="#admin-dashboard" type="button">Dashboard & Gráficos</button>
       </li>
       <li class="nav-item">
-        <button class="nav-link" id="prod-tab" data-bs-toggle="tab" data-bs-target="#admin-productos" type="button">Gestión de Productos</button>
+        <button class="nav-link px-4 py-2" id="prod-tab" data-bs-toggle="pill" data-bs-target="#admin-productos" type="button">Gestión de Productos</button>
       </li>
       <li class="nav-item">
-        <button class="nav-link" id="ped-tab" data-bs-toggle="tab" data-bs-target="#admin-pedidos" type="button">Historial de Pedidos</button>
+        <button class="nav-link px-4 py-2" id="ped-tab" data-bs-toggle="pill" data-bs-target="#admin-pedidos" type="button">Historial de Pedidos</button>
       </li>
     </ul>
 
     <div class="tab-content">
       
-      <!-- DASHBOARD CON GRÁFICOS Y CARDS (REQUISITOS 6 Y 7) -->
+      <!-- CONTENIDO PRINCIPAL DEL DASHBOARD -->
       <div class="tab-pane fade show active" id="admin-dashboard">
         
-        <!-- TARJETAS DE MÉTRICAS RÁPIDAS (KPIs) -->
+        <!-- TARJETAS DE KPIs CON BORDE INDICADOR -->
         <div class="row text-center mb-4 g-3">
-          <div class="col-6 col-md-3">
+          <div class="col-6 col-lg-3">
             <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4 border-success">
               <small class="text-muted fw-bold d-block">Ventas Totales del Mes</small>
-              <h3 id="stat-income" class="text-success fw-bold my-1">$162.480</h3>
+              <h3 id="stat-income" class="text-success fw-bold my-1">$1.679.320</h3>
               <small class="text-muted"><i class="bi bi-graph-up-arrow text-success"></i> +12% vs mes anterior</small>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4 border-primary">
+          
+          <div class="col-6 col-lg-3">
+            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-blue-dark) !important;">
               <small class="text-muted fw-bold d-block">Ventas del Día</small>
-              <h3 id="stat-today" class="text-primary fw-bold my-1">$17.480</h3>
+              <h3 id="stat-today" class="fw-bold my-1" style="color: var(--color-blue-dark);">$1.499.360</h3>
               <small class="text-muted">2 pedidos hoy</small>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4 border-info">
+          
+          <div class="col-6 col-lg-3">
+            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-blue-light) !important;">
               <small class="text-muted fw-bold d-block">Productos Vendidos</small>
-              <h3 id="stat-items" class="text-info fw-bold my-1">14 unidades</h3>
+              <h3 id="stat-items" class="fw-bold my-1" style="color: var(--color-blue-light);">230 unidades</h3>
               <small class="text-muted">Stock saludable</small>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4 border-warning">
+          
+          <div class="col-6 col-lg-3">
+            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-orange) !important;">
               <small class="text-muted fw-bold d-block">Ticket Promedio</small>
-              <h3 id="stat-ticket" class="text-warning fw-bold my-1">$11.605</h3>
+              <h3 id="stat-ticket" class="fw-bold my-1" style="color: var(--color-orange);">$14.603</h3>
               <small class="text-muted">Por compra</small>
             </div>
           </div>
         </div>
 
-        <!-- SECCIÓN DE GRÁFICOS INTERACTIVOS (BASS SIZES) -->
+        <!-- SECCIÓN DE GRÁFICOS INTERACTIVOS (CHART.JS) -->
         <div class="row g-4 mb-4">
-          <!-- GRÁFICO 1: EVOLUCIÓN DE VENTAS (LÍNEA) -->
-          <div class="col-md-8">
-            <div class="card border-0 shadow-sm rounded-4 p-3">
-              <h5 class="fw-bold card-title mb-3"><i class="bi bi-line-chart me-2 text-primary"></i>Evolución de Ingresos y Ventas Diarias</h5>
-              <div>
-                <canvas id="chartSalesTimeline" height="220"></canvas>
+          <!-- 1. EVOLUCIÓN DE INGRESOS -->
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+              <h5 class="fw-bold card-title mb-3" style="color: var(--color-blue-dark);">
+                <i class="bi bi-line-chart me-2" style="color: var(--color-blue-light);"></i>Evolución de Ingresos y Ventas Diarias
+              </h5>
+              <div style="position: relative; height: 260px;">
+                <canvas id="chartSalesTimeline"></canvas>
               </div>
             </div>
           </div>
 
-          <!-- GRÁFICO 2: PARTICIPACIÓN POR CATEGORÍA (DONUT) -->
-          <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 p-3">
-              <h5 class="fw-bold card-title mb-3"><i class="bi bi-pie-chart me-2 text-success"></i>Ventas por Categoría</h5>
-              <div>
-                <canvas id="chartCategories" height="220"></canvas>
+          <!-- 2. VENTAS POR CATEGORÍA -->
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+              <h5 class="fw-bold card-title mb-3" style="color: var(--color-blue-dark);">
+                <i class="bi bi-pie-chart me-2" style="color: var(--color-blue-light);"></i>Ventas por Categoría
+              </h5>
+              <div style="position: relative; height: 260px;">
+                <canvas id="chartCategories"></canvas>
               </div>
             </div>
           </div>
 
-          <!-- GRÁFICO 3: TOP PRODUCTOS MÁS VENDIDOS (BARRAS HORIZONTALES) -->
+          <!-- 3. TOP PRODUCTOS MÁS VENDIDOS -->
           <div class="col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 p-3">
-              <h5 class="fw-bold card-title mb-3"><i class="bi bi-bar-chart-steps me-2 text-info"></i>Top Productos Más Vendidos</h5>
-              <div>
-                <canvas id="chartTopProducts" height="200"></canvas>
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+              <h5 class="fw-bold card-title mb-3" style="color: var(--color-blue-dark);">
+                <i class="bi bi-bar-chart-steps me-2" style="color: var(--color-blue-light);"></i>Top Productos Más Vendidos
+              </h5>
+              <div style="position: relative; height: 220px;">
+                <canvas id="chartTopProducts"></canvas>
               </div>
             </div>
           </div>
 
-          <!-- GRÁFICO 4: MEDIOS DE PAGO (BARRAS) -->
+          <!-- 4. MEDIOS DE PAGO -->
           <div class="col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 p-3">
-              <h5 class="fw-bold card-title mb-3"><i class="bi bi-credit-card-2-front me-2 text-warning"></i>Distribución por Medio de Pago</h5>
-              <div>
-                <canvas id="chartPaymentMethods" height="200"></canvas>
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+              <h5 class="fw-bold card-title mb-3" style="color: var(--color-blue-dark);">
+                <i class="bi bi-credit-card-2-front me-2" style="color: var(--color-blue-light);"></i>Distribución por Medio de Pago
+              </h5>
+              <div style="position: relative; height: 220px;">
+                <canvas id="chartPaymentMethods"></canvas>
               </div>
             </div>
           </div>
         </div>
 
         <!-- TABLA DETALLADA DE PRODUCTOS -->
-        <div class="admin-card">
-          <h5 class="fw-bold mb-3"><i class="bi bi-table me-2"></i>Desglose Comercial por Producto</h5>
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">
+            <i class="bi bi-table me-2" style="color: var(--color-blue-light);"></i>Desglose Comercial por Producto
+          </h5>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
@@ -139,7 +160,7 @@
                 </tr>
               </thead>
               <tbody id="admin-dashboard-products-body">
-                <!-- Carga dinámica vía app.js -->
+                <!-- Se llena dinámicamente con app.js -->
               </tbody>
             </table>
           </div>
@@ -149,8 +170,8 @@
 
       <!-- TAB PRODUCTOS -->
       <div class="tab-pane fade" id="admin-productos">
-        <div class="admin-card">
-          <h5 class="fw-bold mb-3">Catálogo Administrativo</h5>
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">Catálogo Administrativo</h5>
           <table class="table table-hover align-middle">
             <thead>
               <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
@@ -165,8 +186,8 @@
 
       <!-- TAB PEDIDOS -->
       <div class="tab-pane fade" id="admin-pedidos">
-        <div class="admin-card">
-          <h5 class="fw-bold mb-3">Historial de Transacciones Registradas</h5>
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">Historial Global de Pedidos</h5>
           <table class="table align-middle">
             <thead>
               <tr><th>ID Pedido</th><th>Cliente / Dirección</th><th>Total</th><th>Estado Pago</th></tr>
@@ -181,11 +202,9 @@
     </div>
   </main>
 
-  <!-- LIBRERÍA CHART.JS PRIMERO -->
+  <!-- LIBRERÍAS DE SCRIPT REQUERIDAS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- BOOTSTRAP JS SEGUNDO -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- SCRIPT CENTRALIZADO TERCERO -->
   <script src="js/app.js"></script>
 </body>
 </html>
