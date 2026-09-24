@@ -33,12 +33,12 @@
             <input type="text" class="form-control" placeholder="Buscar juguete...">
             <button class="btn btn-blue-light" type="button"><i class="bi bi-search"></i></button>
           </div>
-          <!-- CARRITO (NARANJA #F2845C CON NOTIFICACIÓN ROJA #D93232) -->
+          <!-- CARRITO -->
           <a href="carrito.html" class="btn btn-orange position-relative px-3">
             <i class="bi bi-cart3 fs-5"></i>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
           </a>
-          <!-- ICONO DE USUARIO CIRCULAR (AMARILLO #F2EA79 CON AZUL OSCURO) -->
+          <!-- ICONO DE USUARIO CIRCULAR -->
           <a href="login.html" class="btn-user-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar Sesión / Registro">
             <i class="bi bi-person-fill fs-5"></i>
           </a>
@@ -93,7 +93,6 @@
 
   <!-- CATÁLOGO PRINCIPAL -->
   <section class="container py-3">
-    <!-- ENCABEZADO DEGRADADO AZUL OSCURO (#16498C) A AZUL CLARO (#5F94D9) -->
     <div class="p-4 mb-4 rounded-4 bg-sensory text-white shadow-sm">
       <h1 class="display-6 fw-bold mb-2 text-white">Juguetes Sensoriales para el Desarrollo y Calma</h1>
       <p class="mb-0 lead fs-6">Diseñados especialmente para la estimulación táctil, auditiva y autorregulación emocional.</p>
@@ -128,17 +127,21 @@
         </div>
       </div>
 
-      <!-- PRODUCTOS -->
+      <!-- PRODUCTOS SINCRO-NIZADOS DESDE JS -->
       <div class="col-md-9">
         <div class="row g-4">
           
+          <!-- TARJETA PRODUCTO 1: ID store-prod-1 -->
           <div class="col-md-4">
-            <div class="card card-product h-100 p-3">
+            <div class="card card-product h-100 p-3" id="store-prod-1">
               <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400" class="rounded-3 img-fluid mb-2" alt="Mordedor Silicona">
               <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
                 <div class="d-flex justify-content-between align-items-start mb-1">
                   <h6 class="fw-bold mb-0">Mordedor Sensorial Silicona</h6>
-                  <span class="badge bg-success">Disponible (12)</span>
+                  <!-- CONTENEDOR DE BADGE PARA DINAMISMO -->
+                  <div class="stock-badge-container">
+                    <span class="badge bg-success">Disponible (10)</span>
+                  </div>
                 </div>
                 <small class="text-muted mb-2">Categoría: Táctil | Edad: 0-3</small>
                 
@@ -146,19 +149,23 @@
                 
                 <div class="d-flex gap-2">
                   <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
-                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none">Agregar</a>
+                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- TARJETA PRODUCTO 2: ID store-prod-2 -->
           <div class="col-md-4">
-            <div class="card card-product h-100 p-3">
+            <div class="card card-product h-100 p-3" id="store-prod-2">
               <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400" class="rounded-3 img-fluid mb-2" alt="Lámpara Burbujas">
               <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
                 <div class="d-flex justify-content-between align-items-start mb-1">
                   <h6 class="fw-bold mb-0">Lámpara de Burbujas Calmante</h6>
-                  <span class="badge bg-warning">Bajo Stock (3)</span>
+                  <!-- CONTENEDOR DE BADGE PARA DINAMISMO -->
+                  <div class="stock-badge-container">
+                    <span class="badge bg-warning text-dark">Bajo Stock (3)</span>
+                  </div>
                 </div>
                 <small class="text-muted mb-2">Categoría: Visual | Edad: 3-6</small>
                 
@@ -166,7 +173,7 @@
                 
                 <div class="d-flex gap-2">
                   <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
-                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none">Agregar</a>
+                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
                 </div>
               </div>
             </div>
@@ -196,7 +203,7 @@
               <p class="text-muted small">Silicona suave de grado alimenticio, ideal para aliviar la dentición.</p>
               <h4 class="price-tag mb-2">$6.990</h4>
               <p class="mb-1 small"><strong>Edad:</strong> 0 a 3 años</p>
-              <p class="small mb-0"><strong>Stock:</strong> 12 disponibles</p>
+              <p class="small mb-0"><strong>Stock:</strong> En sincronía con el sistema</p>
             </div>
           </div>
         </div>

@@ -1,428 +1,283 @@
 /* ==========================================================================
-   APP.JS - LÓGICA COMPLETA DE VALIDACIONES, PASARELA Y DASHBOARD DE GRÁFICOS
+   APP.JS - MOTOR COMPLETO: BD LOCAL, CARRITO, DASHBOARD Y GESTIÓN
    ========================================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Inicializar Tooltips sutiles de Bootstrap para el botón de usuario
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+let prodModalInstance = null;
+let userModalInstance = null;
 
-  initRegisterForm();
-  initLoginForm();
-  initCheckoutForm();
-  initCartCalculator();
-  initAdminDashboard();
+document.addEventListener("DOMContentLoaded", () => {
+  initLocalDB();
+  updateNavbarAuth();
+  syncStoreStock(); // <--- AGREGA ESTA LÍNEA AQUÍ
+
+  if (document.getElementById('register-form')) initRegisterForm();
+  if (document.getElementById('login-form')) initLoginForm();
+  if (document.getElementById('checkout-form')) initCheckoutForm();
+  if (document.getElementById('cart-item-qty')) initCartCalculator();
+  if (document.getElementById('admin-dashboard')) {
+    initAdminDashboard();
+    initAdminManager();
+  }
 });
 
 /* --------------------------------------------------------------------------
-   1. CALCULADORA DINÁMICA DE PRECIOS Y CANTIDAD
+   1. BASE DE DATOS LOCAL (SIMULACIÓN DE BACKEND)
    -------------------------------------------------------------------------- */
-const UNIT_PRICE = 6990;
-const SHIPPING_COST = 3500;
+function initLocalDB() {
+  if (!localStorage.getItem('db_products')) {
+    localStorage.setItem('db_products', JSON.stringify([
+      { id: 1, name: 'Mordedor Sensorial Silicona', price: 6990, stock: 10, status: 'Activo' },
+      { id: 2, name: 'Lámpara de Burbujas Calmante', price: 24990, stock: 3, status: 'Activo' }
+    ]));
+  }
+  if (!localStorage.getItem('db_users')) {
+    localStorage.setItem('db_users', JSON.stringify([
+      { id: 1, name: 'Administrador Principal', rut: '11.111.111-1', email: 'admin@sensoritoys.cl', pass: 'admin123', role: 'admin' }
+    ]));
+  }
+  if (!localStorage.getItem('db_orders')) {
+    localStorage.setItem('db_orders', JSON.stringify([]));
+  }
+}
 
-function initCartCalculator() {
-  const qtyInput = document.getElementById('cart-item-qty');
-  if (!qtyInput) return;
+function getDB(table) { return JSON.parse(localStorage.getItem(table)) || []; }
+function setDB(table, data) { localStorage.setItem(table, JSON.stringify(data)); }
 
-  // Escuchar cualquier cambio en vivo (tecleo o flechas)
-  qtyInput.addEventListener('input', updateCartTotals);
-  qtyInput.addEventListener('change', updateCartTotals);
+/* --------------------------------------------------------------------------
+   2. NAVBAR Y SESIÓN
+   -------------------------------------------------------------------------- */
+function updateNavbarAuth() {
+  const currentUser = getDB('current_user');
+  const userBtnContainer = document.querySelector('.btn-user-icon')?.parentElement;
   
-  // Calcular valores iniciales
-  updateCartTotals();
-}
+  if (currentUser && Object.keys(currentUser).length > 0 && userBtnContainer) {
+    userBtnContainer.innerHTML = `
+      <div class="dropdown">
+        <a href="#" class="btn-user-icon text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" style="background-color: var(--color-blue-light);">
+          <i class="bi bi-person-check-fill fs-5"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+          <li><h6 class="dropdown-header">Hola, ${currentUser.name.split(' ')[0]}</h6></li>
+          <li><a class="dropdown-item" href="perfil.html"><i class="bi bi-person-vcard me-2"></i>Mi Perfil</a></li>
+          ${currentUser.role === 'admin' ? `<li><a class="dropdown-item text-danger" href="admin.html"><i class="bi bi-shield-lock me-2"></i>Panel Admin</a></li>` : ''}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" id="btn-logout"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+        </ul>
+      </div>
+    `;
 
-function updateCartTotals() {
-  const qtyInput = document.getElementById('cart-item-qty');
-  if (!qtyInput) return;
-
-  let qty = parseInt(qtyInput.value);
-  if (isNaN(qty) || qty < 1) qty = 1;
-
-  const subtotal = qty * UNIT_PRICE;
-  const total = subtotal + SHIPPING_COST;
-
-  // Actualizar la interfaz en tiempo real
-  const itemSubtotalEl = document.getElementById('cart-item-subtotal');
-  const summarySubtotalEl = document.getElementById('summary-subtotal');
-  const summaryTotalEl = document.getElementById('summary-total');
-  const modalTotalEl = document.getElementById('modal-total-display');
-
-  if (itemSubtotalEl) itemSubtotalEl.textContent = `$${subtotal.toLocaleString()}`;
-  if (summarySubtotalEl) summarySubtotalEl.textContent = `$${subtotal.toLocaleString()}`;
-  if (summaryTotalEl) summaryTotalEl.textContent = `$${total.toLocaleString()}`;
-  if (modalTotalEl) modalTotalEl.textContent = `$${total.toLocaleString()}`;
-}
-
-/* --------------------------------------------------------------------------
-   2. VALIDACIONES DE TARJETA FICTICIA/PRUEBA Y FECHA DE EXPIRACIÓN
-   -------------------------------------------------------------------------- */
-
-// Validar tarjetas numéricas de 13 a 19 dígitos (Acepta números ficticios o de prueba)
-function isValidCreditCard(cardNumber) {
-  if (!cardNumber) return false;
-  let cleanNum = cardNumber.replace(/\D/g, '');
-  return cleanNum.length >= 13 && cleanNum.length <= 19;
-}
-
-// Validar que la fecha MM/AA NO esté vencida
-function isFutureCardDate(expString) {
-  if (!expString || !/^\d{2}\/\d{2}$/.test(expString.trim())) return false;
-
-  const parts = expString.split('/');
-  const month = parseInt(parts[0], 10);
-  const year = parseInt("20" + parts[1], 10);
-
-  if (month < 1 || month > 12) return false;
-
-  const now = new Date();
-  const currentMonth = now.getMonth() + 1;
-  const currentYear = now.getFullYear();
-
-  if (year < currentYear) return false;
-  if (year === currentYear && month < currentMonth) return false;
-
-  return true;
-}
-
-// Función para mostrar/ocultar estado de validación y mensajes explicativos
-function setFieldStatus(inputElement, isValid, errorMessage = '') {
-  if (!inputElement) return;
-
-  let errorContainer = document.getElementById(`${inputElement.id}-error`);
-
-  // Si no existe el div con ID específico, buscamos o creamos una clase feedback
-  if (!errorContainer) {
-    errorContainer = inputElement.parentNode.querySelector('.error-msg');
-    if (!errorContainer) {
-      errorContainer = document.createElement('div');
-      errorContainer.className = 'error-msg';
-      inputElement.parentNode.appendChild(errorContainer);
-    }
-  }
-
-  if (isValid) {
-    inputElement.classList.remove('is-invalid');
-    inputElement.classList.add('is-valid');
-    errorContainer.textContent = '';
-    errorContainer.classList.add('d-none');
-  } else {
-    inputElement.classList.remove('is-valid');
-    inputElement.classList.add('is-invalid');
-    errorContainer.textContent = errorMessage;
-    errorContainer.classList.remove('d-none');
-  }
-}
-
-/* --------------------------------------------------------------------------
-   3. CHECKOUT DE ENVÍO Y PASARELA DE PAGO
-   -------------------------------------------------------------------------- */
-function initCheckoutForm() {
-  const checkoutForm = document.getElementById('checkout-form');
-  const paymentForm = document.getElementById('payment-form');
-
-  if (!checkoutForm) return;
-
-  // Paso 1: Validar formulario de envío y abrir modal de pago
-  checkoutForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let valid = true;
-
-    const calle = document.getElementById('ship-street');
-    const num = document.getElementById('ship-number');
-    const tipo = document.getElementById('ship-housing');
-    const comuna = document.getElementById('ship-comuna');
-    const ciudad = document.getElementById('ship-city');
-    const phone = document.getElementById('ship-phone');
-
-    if (!calle || calle.value.trim() === '') { setFieldStatus(calle, false, 'Ingrese la calle.'); valid = false; } else { setFieldStatus(calle, true); }
-    if (!num || num.value.trim() === '') { setFieldStatus(num, false, 'Ingrese el número.'); valid = false; } else { setFieldStatus(num, true); }
-    if (!tipo || tipo.value === '') { setFieldStatus(tipo, false, 'Seleccione tipo de vivienda.'); valid = false; } else { setFieldStatus(tipo, true); }
-    if (!comuna || comuna.value === '') { setFieldStatus(comuna, false, 'Seleccione una comuna.'); valid = false; } else { setFieldStatus(comuna, true); }
-    if (!ciudad || ciudad.value.trim() === '') { setFieldStatus(ciudad, false, 'Ingrese la ciudad.'); valid = false; } else { setFieldStatus(ciudad, true); }
-
-    if (phone) {
-      const isPhoneValid = /^\+?[0-9]{8,12}$/.test(phone.value.trim());
-      setFieldStatus(phone, isPhoneValid, 'Teléfono inválido.');
-      if (!isPhoneValid) valid = false;
-    }
-
-    if (valid) {
-      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-      paymentModal.show();
-    }
-  });
-
-  // Paso 2: Validar la tarjeta en el modal de pago
-  if (paymentForm) {
-    paymentForm.addEventListener('submit', (e) => {
+    document.getElementById('btn-logout').addEventListener('click', (e) => {
       e.preventDefault();
-      let cardValid = true;
-
-      const cardNum = document.getElementById('card-number');
-      const cardHolder = document.getElementById('card-holder');
-      const cardExp = document.getElementById('card-exp');
-      const cardCvc = document.getElementById('card-cvc');
-
-      // Validar Número de Tarjeta (Acepta tarjetas ficticias)
-      if (!cardNum || !isValidCreditCard(cardNum.value)) {
-        setFieldStatus(cardNum, false, 'Ingrese entre 13 y 19 dígitos numéricos.');
-        cardValid = false;
-      } else { setFieldStatus(cardNum, true); }
-
-      // Validar Titular
-      if (!cardHolder || cardHolder.value.trim().length < 3) {
-        setFieldStatus(cardHolder, false, 'Ingrese el nombre del titular.');
-        cardValid = false;
-      } else { setFieldStatus(cardHolder, true); }
-
-      // Validar Expiración No Vencida
-      if (!cardExp || !isFutureCardDate(cardExp.value)) {
-        setFieldStatus(cardExp, false, 'Tarjeta vencida o fecha inválida (MM/AA).');
-        cardValid = false;
-      } else { setFieldStatus(cardExp, true); }
-
-      // Validar CVC
-      if (!cardCvc || !/^\d{3,4}$/.test(cardCvc.value.trim())) {
-        setFieldStatus(cardCvc, false, 'CVC inválido (debe tener 3 o 4 números).');
-        cardValid = false;
-      } else { setFieldStatus(cardCvc, true); }
-
-      if (cardValid) {
-        recordPurchaseToAdmin();
-        alert("¡Pago autorizado con éxito! La venta se ha enviado al Dashboard.");
-        window.location.href = "pedidos.html";
-      }
+      localStorage.removeItem('current_user');
+      window.location.href = 'index.html';
     });
   }
 }
 
-function recordPurchaseToAdmin() {
-  const qtyInput = document.getElementById('cart-item-qty');
-  let qtyBought = parseInt(qtyInput ? qtyInput.value : 2);
-  if (isNaN(qtyBought) || qtyBought < 1) qtyBought = 1;
-
-  const totalSpent = (qtyBought * UNIT_PRICE) + SHIPPING_COST;
-
-  let salesData = JSON.parse(localStorage.getItem('sensori_sales')) || {
-    totalRevenue: 145000,
-    todayRevenue: 0,
-    itemsSold: 12,
-    products: {
-      "Mordedor Sensorial Silicona": { qty: 8, total: 55920 },
-      "Lámpara de Burbujas Calmante": { qty: 4, total: 99960 }
-    }
-  };
-
-  salesData.totalRevenue += totalSpent;
-  salesData.todayRevenue += totalSpent;
-  salesData.itemsSold += qtyBought;
-
-  if (!salesData.products["Mordedor Sensorial Silicona"]) {
-    salesData.products["Mordedor Sensorial Silicona"] = { qty: 0, total: 0 };
-  }
-
-  salesData.products["Mordedor Sensorial Silicona"].qty += qtyBought;
-  salesData.products["Mordedor Sensorial Silicona"].total += (qtyBought * UNIT_PRICE);
-
-  localStorage.setItem('sensori_sales', JSON.stringify(salesData));
-}
-
 /* --------------------------------------------------------------------------
-   4. INICIO DE SESIÓN Y REGISTRO (RUT MÓDULO 11 & CORREO)
+   3. REGISTRO Y LOGIN
    -------------------------------------------------------------------------- */
-function isValidEmail(email) {
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(String(email).toLowerCase());
-}
-
-function validateRut(rutCompleto) {
-  if (!rutCompleto || rutCompleto.trim() === '') return false;
-  let valor = rutCompleto.replace(/\./g, '').replace(/-/g, '').trim().toUpperCase();
-  if (valor.length < 8) return false;
-
-  let cuerpo = valor.slice(0, -1);
-  let dv = valor.slice(-1);
-  if (!/^[0-9]+$/.test(cuerpo)) return false;
-
-  let suma = 0;
-  let multiplo = 2;
-
-  for (let i = 1; i <= cuerpo.length; i++) {
-    let index = multiplo * valor.charAt(cuerpo.length - i);
-    suma += index;
-    if (multiplo < 7) { multiplo += 1; } else { multiplo = 2; }
-  }
-
-  let dvEsperado = 11 - (suma % 11);
-  let dvCalc = (dvEsperado === 11) ? '0' : (dvEsperado === 10) ? 'K' : dvEsperado.toString();
-
-  return dv === dvCalc;
-}
-
-function formatRut(rutInput) {
-  let valor = rutInput.value.replace(/\./g, '').replace(/-/g, '').trim().toUpperCase();
-  if (valor.length < 2) return;
-  let cuerpo = valor.slice(0, -1);
-  let dv = valor.slice(-1);
-  cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  rutInput.value = `${cuerpo}-${dv}`;
-}
-
 function initRegisterForm() {
   const registerForm = document.getElementById('register-form');
-  const termsCheckbox = document.getElementById('terms-checkbox');
-  const submitBtn = document.getElementById('register-submit-btn');
-
-  if (!registerForm) return;
-
-  if (termsCheckbox && submitBtn) {
-    termsCheckbox.addEventListener('change', () => {
-      submitBtn.disabled = !termsCheckbox.checked;
-    });
-  }
-
-  const rutInput = document.getElementById('reg-rut');
-  if (rutInput) {
-    rutInput.addEventListener('blur', () => formatRut(rutInput));
-  }
-
   registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    let valid = true;
-
-    const name = document.getElementById('reg-firstname');
-    if (name) {
-      const isNameValid = name.value.trim().length >= 2;
-      setFieldStatus(name, isNameValid, 'Ingrese un nombre válido.');
-      if (!isNameValid) valid = false;
+    if (!document.getElementById('terms-checkbox').checked) {
+      alert("Debes aceptar los términos y condiciones."); return;
     }
 
-    const lastname1 = document.getElementById('reg-lastname1');
-    if (lastname1) {
-      const isLastnameValid = lastname1.value.trim().length >= 2;
-      setFieldStatus(lastname1, isLastnameValid, 'Ingrese el primer apellido.');
-      if (!isLastnameValid) valid = false;
+    const name = document.getElementById('reg-firstname').value.trim() + " " + document.getElementById('reg-lastname1').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    
+    let users = getDB('db_users');
+    if (users.find(u => u.email === email)) {
+      alert("Este correo ya está registrado."); return;
     }
 
-    if (rutInput) {
-      const isRutValid = validateRut(rutInput.value);
-      setFieldStatus(rutInput, isRutValid, 'RUT inválido. Ejemplo: 12.345.678-9');
-      if (!isRutValid) valid = false;
-    }
-
-    const email = document.getElementById('reg-email');
-    if (email) {
-      const isEmailValid = isValidEmail(email.value);
-      setFieldStatus(email, isEmailValid, 'Ingrese un correo electrónico válido.');
-      if (!isEmailValid) valid = false;
-    }
-
-    const pass = document.getElementById('reg-pass');
-    const passConfirm = document.getElementById('reg-pass-confirm');
-    if (pass) {
-      const isPassValid = pass.value.length >= 6;
-      setFieldStatus(pass, isPassValid, 'Mínimo 6 caracteres.');
-      if (!isPassValid) valid = false;
-    }
-
-    if (passConfirm) {
-      const isMatch = passConfirm.value === pass.value && passConfirm.value !== '';
-      setFieldStatus(passConfirm, isMatch, 'Las contraseñas no coinciden.');
-      if (!isMatch) valid = false;
-    }
-
-    if (valid) {
-      alert("¡Cuenta creada exitosamente!");
-      window.location.href = "index.html";
-    }
+    const newUser = { id: Date.now(), name: name, rut: document.getElementById('reg-rut').value, email: email, pass: document.getElementById('reg-pass').value, role: 'cliente' };
+    users.push(newUser);
+    setDB('db_users', users);
+    setDB('current_user', newUser); // Auto-login
+    alert("¡Cuenta creada exitosamente!");
+    window.location.href = "perfil.html";
   });
 }
 
 function initLoginForm() {
   const loginForm = document.getElementById('login-form');
-  if (!loginForm) return;
-
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const email = document.getElementById('login-email');
-    const pass = document.getElementById('login-pass');
-    let valid = true;
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    
+    const users = getDB('db_users');
+    const user = users.find(u => u.email === email && u.pass === pass);
 
-    if (email) {
-      const isEmailValid = isValidEmail(email.value);
-      setFieldStatus(email, isEmailValid, 'Ingrese un correo válido.');
-      if (!isEmailValid) valid = false;
+    if (user) {
+      setDB('current_user', user);
+      window.location.href = user.role === 'admin' ? "admin.html" : "perfil.html";
+    } else {
+      alert("Credenciales incorrectas.");
     }
-
-    if (pass) {
-      const isPassValid = pass.value.trim() !== '';
-      setFieldStatus(pass, isPassValid, 'Ingrese su contraseña.');
-      if (!isPassValid) valid = false;
-    }
-
-    if (valid) window.location.href = "index.html";
   });
 }
 
 /* --------------------------------------------------------------------------
-   5. DASHBOARD ADMINISTRATIVO Y GRÁFICOS CON LA NUEVA PALETA
+   4. CARRITO Y CHECKOUT (CONTROL DE STOCK REAL)
    -------------------------------------------------------------------------- */
-function initAdminDashboard() {
-  const statIncome = document.getElementById('stat-income');
-  if (!statIncome) return;
+const SHIPPING_COST = 3500;
 
-  let salesData = JSON.parse(localStorage.getItem('sensori_sales'));
-  if (!salesData) {
-    salesData = {
-      totalRevenue: 162480,
-      todayRevenue: 17480,
-      itemsSold: 14,
-      products: {
-        "Mordedor Sensorial Silicona": { qty: 10, total: 69900 },
-        "Lámpara de Burbujas Calmante": { qty: 4, total: 99960 }
-      }
-    };
-    localStorage.setItem('sensori_sales', JSON.stringify(salesData));
-  }
-
-  statIncome.textContent = `$${salesData.totalRevenue.toLocaleString()}`;
-  document.getElementById('stat-today').textContent = `$${salesData.todayRevenue.toLocaleString()}`;
-  document.getElementById('stat-items').textContent = `${salesData.itemsSold} unidades`;
-
-  const avgTicket = Math.round(salesData.totalRevenue / (salesData.itemsSold / 2 || 1));
-  document.getElementById('stat-ticket').textContent = `$${avgTicket.toLocaleString()}`;
-
-  const tableBody = document.getElementById('admin-dashboard-products-body');
-  if (tableBody) {
-    tableBody.innerHTML = '';
-    for (const [prodName, prodData] of Object.entries(salesData.products)) {
-      tableBody.innerHTML += `
-        <tr>
-          <td><i class="bi bi-box-seam me-2 text-primary"></i>${prodName}</td>
-          <td><span class="badge bg-info text-dark fs-6">${prodData.qty} unidades</span></td>
-          <td class="fw-bold">$${prodData.total.toLocaleString()}</td>
-          <td><span class="badge bg-success">En Stock</span></td>
-        </tr>
-      `;
+function initCartCalculator() {
+  const qtyInput = document.getElementById('cart-item-qty');
+  qtyInput.addEventListener('input', () => {
+    let qty = parseInt(qtyInput.value);
+    const products = getDB('db_products');
+    const targetProduct = products.find(p => p.id === 1); // Producto demo ID 1
+    
+    if (qty > targetProduct.stock) {
+      alert(`Solo quedan ${targetProduct.stock} unidades en stock.`);
+      qtyInput.value = targetProduct.stock;
+      qty = targetProduct.stock;
     }
-  }
+    if (isNaN(qty) || qty < 1) qty = 1;
+    
+    const subtotal = qty * targetProduct.price;
+    const total = subtotal + SHIPPING_COST;
 
-  renderAdminCharts(salesData);
+    if(document.getElementById('cart-item-subtotal')) document.getElementById('cart-item-subtotal').textContent = `$${subtotal.toLocaleString('es-CL')}`;
+    if(document.getElementById('summary-subtotal')) document.getElementById('summary-subtotal').textContent = `$${subtotal.toLocaleString('es-CL')}`;
+    if(document.getElementById('summary-total')) document.getElementById('summary-total').textContent = `$${total.toLocaleString('es-CL')}`;
+    if(document.getElementById('modal-total-display')) document.getElementById('modal-total-display').textContent = `$${total.toLocaleString('es-CL')}`;
+  });
 }
 
-function renderAdminCharts(salesData) {
+function initCheckoutForm() {
+  const paymentForm = document.getElementById('payment-form');
+  const checkoutForm = document.getElementById('checkout-form');
+
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      modal.show();
+    });
+  }
+
+  if (paymentForm) {
+    paymentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const currentUser = getDB('current_user');
+      
+      if (!currentUser || Object.keys(currentUser).length === 0) {
+        alert("Debes iniciar sesión para comprar.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const qty = parseInt(document.getElementById('cart-item-qty').value);
+      let products = getDB('db_products');
+      let prodIndex = products.findIndex(p => p.id === 1);
+
+      if (qty > products[prodIndex].stock) {
+        alert("Stock insuficiente."); return;
+      }
+
+      // Descontar Stock
+      products[prodIndex].stock -= qty;
+      setDB('db_products', products);
+
+      // Registrar Pedido
+      let orders = getDB('db_orders');
+      orders.push({
+        id: `#${1000 + orders.length + 1}`,
+        user: currentUser.name,
+        email: currentUser.email,
+        product: products[prodIndex].name,
+        qty: qty,
+        total: (qty * products[prodIndex].price) + SHIPPING_COST,
+        date: new Date().toLocaleDateString()
+      });
+      setDB('db_orders', orders);
+
+      alert("¡Pago exitoso! El stock ha sido descontado.");
+      window.location.href = "index.html";
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. DASHBOARD ADMIN (TABLAS Y GRÁFICOS RESTAURADOS)
+   -------------------------------------------------------------------------- */
+function initAdminDashboard() {
+  const users = getDB('db_users');
+  const products = getDB('db_products');
+  const orders = getDB('db_orders');
+
+  // Llenar Usuarios
+  const usersTbody = document.querySelector('#usersTable tbody');
+  if (usersTbody) {
+    usersTbody.innerHTML = users.map(u => `
+      <tr id="user-${u.id}">
+        <td><div class="fw-bold">${u.name}</div></td>
+        <td>${u.rut}</td>
+        <td>${u.email}</td>
+        <td><span class="badge ${u.role === 'admin' ? 'bg-danger' : 'bg-info text-dark'}">${u.role.toUpperCase()}</span></td>
+        <td class="text-center">
+          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-outline-danger btn-delete-user" data-id="${u.id}" title="Eliminar"><i class="bi bi-trash-fill"></i></button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Llenar Productos
+  const productsTbody = document.querySelector('#productsTable tbody');
+  if (productsTbody) {
+    productsTbody.innerHTML = products.map(p => `
+      <tr id="prod-${p.id}" style="opacity: ${p.status === 'Inactivo' ? '0.5' : '1'}">
+        <td>${p.id}</td>
+        <td class="fw-bold prod-name">${p.name}</td>
+        <td class="prod-price">$${p.price.toLocaleString('es-CL')}</td>
+        <td class="fw-bold prod-stock ${p.stock <= 3 ? 'text-danger' : 'text-primary'}">${p.stock} un.</td>
+        <td><span class="badge ${p.stock > 0 ? 'bg-success' : 'bg-danger'}">${p.stock > 0 ? 'Disponible' : 'Agotado'}</span></td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-primary me-1 btn-edit-prod" data-id="${p.id}"><i class="bi bi-pencil-fill"></i></button>
+          <button class="btn btn-sm btn-warning me-1 text-dark btn-toggle-prod" data-id="${p.id}"><i class="bi bi-power"></i></button>
+          <button class="btn btn-sm btn-outline-danger btn-delete-prod" data-id="${p.id}"><i class="bi bi-trash-fill"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Llenar Pedidos
+  const ordersTbody = document.querySelector('#admin-pedidos tbody');
+  if (ordersTbody && orders.length > 0) {
+    ordersTbody.innerHTML = orders.map(o => `
+      <tr>
+        <td><strong>${o.id}</strong></td>
+        <td>${o.user}</td>
+        <td>${o.qty}x ${o.product}</td>
+        <td class="fw-bold" style="color: var(--color-blue-dark);">$${o.total.toLocaleString('es-CL')}</td>
+        <td><span class="badge bg-success">Aprobado</span></td>
+      </tr>
+    `).join('');
+  }
+
+  // KPIs
+  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const totalItems = orders.reduce((sum, order) => sum + order.qty, 0);
+  
+  if(document.getElementById('stat-income')) document.getElementById('stat-income').textContent = `$${(1679320 + totalRevenue).toLocaleString('es-CL')}`;
+  if(document.getElementById('stat-items')) document.getElementById('stat-items').textContent = `${230 + totalItems} unidades`;
+
+  renderAdminCharts(totalRevenue, orders);
+}
+
+function renderAdminCharts(realRevenue, orders) {
   if (typeof Chart === 'undefined') return;
 
-  // Limpiar instancias previas para evitar superposiciones
-  ['chartSalesTimeline', 'chartCategories', 'chartTopProducts', 'chartPaymentMethods'].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (canvas) {
-      const chartInstance = Chart.getChart(canvas);
-      if (chartInstance) chartInstance.destroy();
-    }
-  });
+  let itemsSold = {'Mordedor Sensorial Silicona': 180, 'Lámpara de Burbujas Calmante': 50};
+  orders.forEach(o => { if (itemsSold[o.product] !== undefined) itemsSold[o.product] += o.qty; });
 
-  // 1. Evolución de Ventas (Línea) - Azul Oscuro (#16498C) y Área Azul Claro (#5F94D9)
+  // 1. Evolución (Línea)
   const ctx1 = document.getElementById('chartSalesTimeline');
   if (ctx1) {
     new Chart(ctx1, {
@@ -431,73 +286,162 @@ function renderAdminCharts(salesData) {
         labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4 (Hoy)'],
         datasets: [{
           label: 'Ingresos ($)',
-          data: [35000, 48000, 62000, salesData.totalRevenue || 1679320],
-          borderColor: '#16498C',
-          backgroundColor: 'rgba(95, 148, 217, 0.25)',
-          fill: true,
-          tension: 0.35,
-          pointBackgroundColor: '#16498C',
-          pointRadius: 5
+          data: [35000, 48000, 62000, 1679320 + realRevenue],
+          borderColor: '#16498C', backgroundColor: 'rgba(95, 148, 217, 0.25)', fill: true, tension: 0.35
         }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
+      }, options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
-  // 2. Ventas por Categoría (Doughnut) - Paleta Oficial: Azul Claro (#5F94D9), Amarillo (#F2EA79), Naranja (#F2845C)
+  // 2. Categorías (Doughnut)
   const ctx2 = document.getElementById('chartCategories');
   if (ctx2) {
     new Chart(ctx2, {
       type: 'doughnut',
       data: {
         labels: ['Estimulación Táctil', 'Lámparas/Visual', 'Motricidad Fina'],
-        datasets: [{
-          data: [55, 35, 10],
-          backgroundColor: ['#5F94D9', '#F2EA79', '#F2845C'],
-          borderWidth: 2,
-          borderColor: '#FFFFFF'
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
+        datasets: [{ data: [55, 35, 10], backgroundColor: ['#5F94D9', '#F2EA79', '#F2845C'] }]
+      }, options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
-  // 3. Top Productos (Barras Horizontales) - Azul Claro (#5F94D9) y Naranja (#F2845C)
+  // 3. Top Productos (Bar)
   const ctx3 = document.getElementById('chartTopProducts');
   if (ctx3) {
-    const prodNames = Object.keys(salesData.products || {});
-    const prodQtys = prodNames.map(k => salesData.products[k].qty);
-
     new Chart(ctx3, {
       type: 'bar',
       data: {
-        labels: prodNames.length ? prodNames : ['Mordedor Sensorial', 'Lámpara Burbujas'],
+        labels: ['Mordedor Sensorial', 'Lámpara Burbujas'],
         datasets: [{
           label: 'Unidades Vendidas',
-          data: prodQtys.length ? prodQtys : [180, 50],
-          backgroundColor: ['#5F94D9', '#F2845C'],
-          borderRadius: 8
+          data: [itemsSold['Mordedor Sensorial Silicona'], itemsSold['Lámpara de Burbujas Calmante']],
+          backgroundColor: ['#5F94D9', '#F2845C'], borderRadius: 8
         }]
-      },
-      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+      }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. GESTIÓN ADMINISTRATIVA (CRUD DE PRODUCTOS Y USUARIOS)
+   -------------------------------------------------------------------------- */
+function initAdminManager() {
+  const prodModalEl = document.getElementById('productModal');
+  if (prodModalEl) prodModalInstance = new bootstrap.Modal(prodModalEl);
+
+  // Agregar Producto
+  const btnAddProduct = document.getElementById('btn-open-add-product');
+  if (btnAddProduct) {
+    btnAddProduct.addEventListener('click', () => {
+      document.getElementById('modalProductTitle').innerText = 'Agregar Nuevo Producto';
+      document.getElementById('editProdRowId').value = '';
+      document.getElementById('productForm').reset();
+      prodModalInstance.show();
     });
   }
 
-  // 4. Medios de Pago (Barras Verticales) - Naranja (#F2845C) y Azul Oscuro (#16498C)
-  const ctx4 = document.getElementById('chartPaymentMethods');
-  if (ctx4) {
-    new Chart(ctx4, {
-      type: 'bar',
-      data: {
-        labels: ['Tarjeta Débito/Crédito', 'Transferencia Bancaria'],
-        datasets: [{
-          label: 'Transacciones',
-          data: [18, 6],
-          backgroundColor: ['#F2845C', '#16498C'],
-          borderRadius: 8
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
+  // Guardar Producto
+  const btnSaveProduct = document.getElementById('btn-save-product');
+  if (btnSaveProduct) {
+    btnSaveProduct.addEventListener('click', () => {
+      const id = document.getElementById('editProdRowId').value;
+      const name = document.getElementById('editProdName').value;
+      const price = parseInt(document.getElementById('editProdPrice').value);
+      const stock = parseInt(document.getElementById('editProdStock').value);
+      
+      let products = getDB('db_products');
+      if (id) {
+        let p = products.find(prod => prod.id == id);
+        if(p) { p.name = name; p.price = price; p.stock = stock; }
+      } else {
+        products.push({ id: Date.now(), name, price, stock, status: 'Activo' });
+      }
+      setDB('db_products', products);
+      prodModalInstance.hide();
+      initAdminDashboard(); // Recargar tabla
     });
   }
+
+  // Delegación de eventos (Editar/Eliminar)
+  document.addEventListener('click', (e) => {
+    // Editar Prod
+    const btnEditProd = e.target.closest('.btn-edit-prod');
+    if (btnEditProd) {
+      const id = btnEditProd.getAttribute('data-id');
+      const p = getDB('db_products').find(prod => prod.id == id);
+      if(p) {
+        document.getElementById('modalProductTitle').innerText = 'Editar Producto';
+        document.getElementById('editProdRowId').value = p.id;
+        document.getElementById('editProdName').value = p.name;
+        document.getElementById('editProdPrice').value = p.price;
+        document.getElementById('editProdStock').value = p.stock;
+        prodModalInstance.show();
+      }
+    }
+
+    // Toggle Prod
+    const btnToggleProd = e.target.closest('.btn-toggle-prod');
+    if (btnToggleProd) {
+      const id = btnToggleProd.getAttribute('data-id');
+      let products = getDB('db_products');
+      let p = products.find(prod => prod.id == id);
+      if(p) { p.status = p.status === 'Activo' ? 'Inactivo' : 'Activo'; setDB('db_products', products); initAdminDashboard(); }
+    }
+
+    // Eliminar Prod
+    const btnDelProd = e.target.closest('.btn-delete-prod');
+    if (btnDelProd && confirm("¿Eliminar este producto?")) {
+      const id = btnDelProd.getAttribute('data-id');
+      setDB('db_products', getDB('db_products').filter(p => p.id != id));
+      initAdminDashboard();
+    }
+
+    // Eliminar Usuario (Solo clientes)
+    const btnDelUser = e.target.closest('.btn-delete-user');
+    if (btnDelUser && confirm("¿Eliminar usuario?")) {
+      const id = btnDelUser.getAttribute('data-id');
+      setDB('db_users', getDB('db_users').filter(u => u.id != id));
+      initAdminDashboard();
+    }
+  });
+}
+/* --------------------------------------------------------------------------
+   7. SINCRONIZACIÓN DEL CATÁLOGO DE LA TIENDA (INDEX.HTML)
+   -------------------------------------------------------------------------- */
+function syncStoreStock() {
+  const products = getDB('db_products');
+  
+  products.forEach(p => {
+    // Buscar la tarjeta del producto por su ID
+    const card = document.getElementById(`store-prod-${p.id}`);
+    
+    if (card) {
+      const badgeContainer = card.querySelector('.stock-badge-container');
+      const addBtn = card.querySelector('.btn-agregar');
+      
+      // 1. Actualizar el texto y color de la etiqueta (Badge)
+      if (badgeContainer) {
+        if (p.stock <= 0) {
+          badgeContainer.innerHTML = `<span class="badge bg-danger rounded-pill">Agotado (0)</span>`;
+        } else if (p.stock <= 5) {
+          badgeContainer.innerHTML = `<span class="badge bg-warning text-dark rounded-pill">Bajo Stock (${p.stock})</span>`;
+        } else {
+          badgeContainer.innerHTML = `<span class="badge bg-success rounded-pill">Disponible (${p.stock})</span>`;
+        }
+      }
+      
+      // 2. Bloquear el botón de "Agregar" si no hay stock
+      if (addBtn) {
+        if (p.stock <= 0) {
+          addBtn.disabled = true;
+          addBtn.classList.replace('btn-orange', 'btn-secondary'); // Cambia a gris
+          addBtn.textContent = 'Sin Stock';
+        } else {
+          addBtn.disabled = false;
+          addBtn.classList.replace('btn-secondary', 'btn-orange'); // Vuelve a naranjo
+          addBtn.textContent = 'Agregar';
+        }
+      }
+    }
+  });
 }

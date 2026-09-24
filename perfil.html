@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SensoriToys - Mi Perfil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/miestilo.css">
+</head>
+<body class="bg-light">
+
+  <!-- NAVBAR ESTÁNDAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--color-blue-dark);">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-balloon-heart-fill me-2" style="color: var(--color-yellow);"></i>SensoriToys
+      </a>
+      <a href="index.html" class="btn btn-sm btn-outline-light"><i class="bi bi-arrow-left me-1"></i>Volver a Tienda</a>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="text-center mb-4">
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3 text-white shadow-sm" style="width: 80px; height: 80px; background-color: var(--color-orange);">
+              <i class="bi bi-person-fill fs-1"></i>
+            </div>
+            <h3 class="fw-bold mb-1" id="profile-name" style="color: var(--color-blue-dark);">Cargando...</h3>
+            <span class="badge bg-info text-dark">Cliente Verificado</span>
+          </div>
+
+          <form id="profile-form">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-card-text me-2"></i>Datos Personales</h5>
+            
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Nombre Completo</label>
+              <input type="text" class="form-control" id="prof-name" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Correo Electrónico (Solo Lectura)</label>
+              <input type="email" class="form-control bg-light" id="prof-email" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Teléfono de Contacto</label>
+              <input type="text" class="form-control" id="prof-phone" placeholder="Ej: +56912345678">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label small fw-semibold">Dirección de Despacho Predeterminada</label>
+              <textarea class="form-control" id="prof-address" rows="2" placeholder="Ej: Av. Las Flores 123, Concepción"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-orange w-100 py-3 fw-bold">
+              <i class="bi bi-save me-2"></i>Guardar Cambios
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // LÓGICA EXCLUSIVA DEL PERFIL (Leer y Guardar en LocalStorage)
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentUser = JSON.parse(localStorage.getItem('current_user'));
+      
+      // Protección de ruta
+      if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Cargar datos en los inputs
+      document.getElementById('profile-name').textContent = currentUser.name;
+      document.getElementById('prof-name').value = currentUser.name;
+      document.getElementById('prof-email').value = currentUser.email;
+      document.getElementById('prof-phone').value = currentUser.phone || '';
+      document.getElementById('prof-address').value = currentUser.address || '';
+
+      // Evento guardar cambios
+      document.getElementById('profile-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        currentUser.name = document.getElementById('prof-name').value;
+        currentUser.phone = document.getElementById('prof-phone').value;
+        currentUser.address = document.getElementById('prof-address').value;
+
+        // Actualizar sesión actual
+        localStorage.setItem('current_user', JSON.stringify(currentUser));
+
+        // Actualizar en la base de datos de usuarios general
+        let users = JSON.parse(localStorage.getItem('db_users'));
+        let userIndex = users.findIndex(u => u.email === currentUser.email);
+        if (userIndex !== -1) {
+          users[userIndex] = currentUser;
+          localStorage.setItem('db_users', JSON.stringify(users));
+        }
+
+        document.getElementById('profile-name').textContent = currentUser.name;
+        alert("¡Tus datos han sido actualizados correctamente!");
+      });
+    });
+  </script>
+</body>
+</html>
