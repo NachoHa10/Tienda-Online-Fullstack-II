@@ -10,34 +10,22 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/miestilo.css">
 </head>
-<body>
+<body class="bg-light">
 
-  <!-- BARRA DE NAVEGACIÓN VISIBLE CON AZUL OSCURO (#16498C) -->
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <i class="bi bi-balloon-heart-fill me-2" style="color: var(--color-yellow);"></i>SensoriToys
+        <i class="bi bi-balloon-heart-fill me-2"></i>SensoriToys
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button> 
-      
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Catálogo</a></li>
           <li class="nav-item"><a class="nav-link active" href="pedidos.html">Mis Pedidos</a></li>
           <li class="nav-item"><a class="nav-link" href="reclamos.html">Reclamos y Reembolsos</a></li>
         </ul>
-        
         <div class="d-flex align-items-center gap-3">
-          <!-- BOTÓN CARRITO CON CONTADOR ROJO (#D93232) -->
-          <a href="carrito.html" class="btn btn-orange position-relative px-3">
-            <i class="bi bi-cart3 fs-5"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
-          </a>
-          
-          <!-- BOTÓN DE USUARIO AMARILLO CIRCULAR (#F2EA79) -->
-          <a href="login.html" class="btn-user-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar Sesión / Registro">
+          <a href="login.html" class="btn-user-icon">
             <i class="bi bi-person-fill fs-5"></i>
           </a>
         </div>
@@ -45,47 +33,20 @@
     </div>
   </nav>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <main class="container py-4">
     <div class="d-flex align-items-center mb-4">
-      <div class="bg-primary text-white rounded-circle p-3 me-3 d-inline-flex align-items-center justify-content-center" style="background-color: var(--color-blue-dark) !important;">
-        <i class="bi bi-box-seam-fill fs-3"></i>
+      <div class="rounded-circle p-3 text-white me-3" style="background-color: var(--color-blue-dark);">
+        <i class="bi bi-box-seam fs-2"></i>
       </div>
       <div>
-        <h1 class="h2 fw-bold mb-0" style="color: var(--color-blue-dark);">Mis Pedidos Anteriores</h1>
-        <p class="text-muted small mb-0">Consulta el estado actual e historial de tus compras</p>
+        <h2 class="fw-bold mb-0" style="color: var(--color-blue-dark);">Mis Pedidos Anteriores</h2>
+        <p class="text-muted mb-0">Consulta el estado actual e historial de tus compras</p>
       </div>
     </div>
 
-    <!-- TARJETA DE PEDIDO MEJORADA CON BORDES Y SOMBRA -->
-    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-      <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
-        <div>
-          <div class="d-flex align-items-center gap-2 mb-1">
-            <h5 class="fw-bold mb-0 text-dark">Pedido #101</h5>
-            <span class="badge rounded-pill bg-info text-white px-3 py-2 fw-semibold">
-              <i class="bi bi-clock-history me-1"></i>En Preparación
-            </span>
-          </div>
-          <p class="text-muted small mb-1"><i class="bi bi-calendar3 me-1"></i>Fecha: 15/09/2026</p>
-          <p class="text-muted small mb-1"><i class="bi bi-bag-check me-1"></i>Ítems: Mordedor Sensorial Silicona (2)</p>
-          <p class="text-muted small mb-0"><i class="bi bi-geo-alt me-1"></i>Dirección: Av. Providencia 1234, Concepción</p>
-        </div>
-        
-        <div class="text-end">
-          <small class="text-muted d-block">Monto Total</small>
-          <span class="fw-bold fs-3" style="color: var(--color-blue-dark);">$17.480</span>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-end gap-2">
-        <a href="reclamos.html" class="btn btn-sm btn-blue-light">
-          <i class="bi bi-exclamation-triangle me-1"></i> Reportar / Reclamo
-        </a>
-        <a href="index.html" class="btn btn-sm btn-orange">
-          <i class="bi bi-arrow-repeat me-1"></i> Volver a Comprar
-        </a>
-      </div>
+    <!-- CONTENEDOR DINÁMICO DE PEDIDOS -->
+    <div id="user-orders-list">
+      <!-- Se inyecta dinámicamente con JS -->
     </div>
   </main>
 

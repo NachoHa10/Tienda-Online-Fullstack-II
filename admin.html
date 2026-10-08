@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SensoriToys - Dashboard Administrativo</title>
+  <title>SensoriToys - Dashboard de Administrador</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/miestilo.css">
 </head>
-<body>
+<body class="bg-light" id="admin-dashboard">
 
   <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
-
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -28,112 +28,101 @@
   </nav>
 
   <main class="container py-4">
-    <!-- ENCABEZADO -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- TITULAR -->
+    <div class="d-flex align-items-center mb-4">
+      <div class="rounded-circle p-3 text-white me-3" style="background-color: var(--color-blue-dark);">
+        <i class="bi bi-speedometer2 fs-2"></i>
+      </div>
       <div>
-        <h1 class="h2 fw-bold mb-1" style="color: var(--color-blue-dark);">
-          <i class="bi bi-speedometer2 me-2" style="color: var(--color-blue-light);"></i>Dashboard de Ventas
-        </h1>
-        <p class="text-muted small mb-0">Análisis métrico e indicadores clave de rendimiento (KPIs)</p>
+        <h2 class="fw-bold mb-0" style="color: var(--color-blue-dark);">Dashboard de Ventas</h2>
+        <p class="text-muted mb-0">Análisis métrico e indicadores clave de rendimiento (KPIs)</p>
       </div>
     </div>
 
-    <!-- PESTAÑAS ADMINISTRATIVAS -->
-    <ul class="nav nav-pills mb-4 gap-2" id="adminTab" role="tablist">
+    <!-- PESTAÑAS DE NAVEGACIÓN ADMIN -->
+    <ul class="nav nav-pills mb-4 gap-2" id="adminTabs" role="tablist">
       <li class="nav-item">
-        <button class="nav-link active px-4 py-2" id="dash-tab" data-bs-toggle="pill" data-bs-target="#admin-dashboard" type="button">
-          <i class="bi bi-speedometer2 me-2"></i>Dashboard & Gráficos
+        <button class="nav-link active rounded-pill fw-bold" id="tab-dash" data-bs-toggle="pill" data-bs-target="#admin-dash">
+          <i class="bi bi-graph-up me-2"></i>Dashboard & Gráficos
         </button>
       </li>
       <li class="nav-item">
-        <button class="nav-link px-4 py-2" id="prod-tab" data-bs-toggle="pill" data-bs-target="#admin-productos" type="button">
-          <i class="bi bi-box-seam-fill me-2"></i>Gestión de Productos
+        <button class="nav-link rounded-pill fw-bold" id="tab-prods" data-bs-toggle="pill" data-bs-target="#admin-prods">
+          <i class="bi bi-box-seam me-2"></i>Gestión de Productos
         </button>
       </li>
       <li class="nav-item">
-        <button class="nav-link px-4 py-2" id="ped-tab" data-bs-toggle="pill" data-bs-target="#admin-pedidos" type="button">
-          <i class="bi bi-receipt-cutoff me-2"></i>Historial de Pedidos
+        <button class="nav-link rounded-pill fw-bold" id="tab-orders" data-bs-toggle="pill" data-bs-target="#admin-pedidos">
+          <i class="bi bi-receipt me-2"></i>Historial de Pedidos
         </button>
       </li>
       <li class="nav-item">
-        <button class="nav-link px-4 py-2" id="user-tab" data-bs-toggle="pill" data-bs-target="#admin-usuarios" type="button">
-          <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
+        <button class="nav-link rounded-pill fw-bold" id="tab-users" data-bs-toggle="pill" data-bs-target="#admin-usuarios">
+          <i class="bi bi-people me-2"></i>Gestión de Usuarios
         </button>
       </li>
     </ul>
 
     <div class="tab-content">
       
-      <!-- TAB 1: DASHBOARD DE GRÁFICOS -->
-      <div class="tab-pane fade show active" id="admin-dashboard">
-        <div class="row text-center mb-4 g-3">
-          <div class="col-6 col-lg-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4 border-success">
-              <small class="text-muted fw-bold d-block">Ventas Totales del Mes</small>
-              <h3 id="stat-income" class="text-success fw-bold my-1">$1.679.320</h3>
-              <small class="text-muted"><i class="bi bi-graph-up-arrow text-success"></i> +12% vs mes anterior</small>
+      <!-- TAB 1: DASHBOARD Y GRÁFICOS (SIN MEDIOS DE PAGO) -->
+      <div class="tab-pane fade show active" id="admin-dash">
+        <!-- KPIs -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-success">
+              <span class="text-muted small fw-bold">Ventas Totales</span>
+              <h3 class="fw-bold mb-0 text-success" id="stat-income">$0</h3>
             </div>
           </div>
-          <div class="col-6 col-lg-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-blue-dark) !important;">
-              <small class="text-muted fw-bold d-block">Ventas del Día</small>
-              <h3 id="stat-today" class="fw-bold my-1" style="color: var(--color-blue-dark);">$1.499.360</h3>
-              <small class="text-muted">2 pedidos hoy</small>
-            </div>
-          </div>
-          <div class="col-6 col-lg-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-blue-light) !important;">
-              <small class="text-muted fw-bold d-block">Productos Vendidos</small>
-              <h3 id="stat-items" class="fw-bold my-1" style="color: var(--color-blue-light);">230 unidades</h3>
-              <small class="text-muted">Stock saludable</small>
-            </div>
-          </div>
-          <div class="col-6 col-lg-3">
-            <div class="p-3 bg-white rounded-4 shadow-sm border-start border-4" style="border-color: var(--color-orange) !important;">
-              <small class="text-muted fw-bold d-block">Ticket Promedio</small>
-              <h3 id="stat-ticket" class="fw-bold my-1" style="color: var(--color-orange);">$14.603</h3>
-              <small class="text-muted">Por compra</small>
+          <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white border-start border-4 border-primary">
+              <span class="text-muted small fw-bold">Unidades Vendidas</span>
+              <h3 class="fw-bold mb-0 text-primary" id="stat-items">0 unidades</h3>
             </div>
           </div>
         </div>
 
-        <div class="row g-4 mb-4">
+        <!-- GRÁFICOS SUPERIORES -->
+        <div class="row g-4">
           <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);"><i class="bi bi-line-chart me-2"></i>Evolución de Ingresos</h5>
-              <div style="position: relative; height: 240px;"><canvas id="chartSalesTimeline"></canvas></div>
+              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">Evolución de Ingresos</h5>
+              <div style="height: 280px;">
+                <canvas id="chartSalesTimeline"></canvas>
+              </div>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);"><i class="bi bi-pie-chart me-2"></i>Ventas por Categoría</h5>
-              <div style="position: relative; height: 240px;"><canvas id="chartCategories"></canvas></div>
+              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">Ventas por Categoría</h5>
+              <div style="height: 280px;">
+                <canvas id="chartCategories"></canvas>
+              </div>
             </div>
           </div>
-          <div class="col-md-6">
+        </div>
+
+        <!-- GRÁFICO INFERIOR (TOP PRODUCTOS A ANCHO COMPLETO) -->
+        <div class="row g-4 mt-2">
+          <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);"><i class="bi bi-bar-chart-steps me-2"></i>Top Productos</h5>
-              <div style="position: relative; height: 200px;"><canvas id="chartTopProducts"></canvas></div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);"><i class="bi bi-credit-card-2-front me-2"></i>Medios de Pago</h5>
-              <div style="position: relative; height: 200px;"><canvas id="chartPaymentMethods"></canvas></div>
+              <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);">Top Productos Más Vendidos</h5>
+              <div style="height: 260px;">
+                <canvas id="chartTopProducts"></canvas>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- TAB 2: GESTIÓN DE PRODUCTOS -->
-      <div class="tab-pane fade" id="admin-productos">
+      <div class="tab-pane fade" id="admin-prods">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0" style="color: var(--color-blue-dark);">
-              <i class="bi bi-box-seam-fill me-2" style="color: var(--color-blue-light);"></i>Catálogo Administrativo de Productos
-            </h5>
-            <button class="btn btn-sm btn-orange font-bold text-white px-3 py-2" id="btn-open-add-product">
-              <i class="bi bi-plus-circle-fill me-1"></i> Agregar Producto
+            <h5 class="fw-bold mb-0">Catálogo Administrativo de Productos</h5>
+            <button class="btn btn-orange btn-sm fw-bold" id="btn-open-add-product">
+              <i class="bi bi-plus-lg me-1"></i>Agregar Producto
             </button>
           </div>
           <div class="table-responsive">
@@ -148,32 +137,7 @@
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr id="prod-row-1">
-                  <td>1</td>
-                  <td class="fw-bold prod-name">Mordedor Sensorial Silicona</td>
-                  <td class="prod-price">$6.990</td>
-                  <td class="fw-bold prod-stock text-primary">10 un.</td>
-                  <td><span class="badge bg-success prod-status-badge">Disponible</span></td>
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-primary me-1 btn-edit-prod" data-id="prod-row-1" title="Editar"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn btn-sm btn-warning me-1 text-dark btn-toggle-prod" data-id="prod-row-1" title="Desactivar/Activar"><i class="bi bi-power"></i></button>
-                    <button class="btn btn-sm btn-outline-danger btn-delete-prod" data-id="prod-row-1" title="Eliminar"><i class="bi bi-trash-fill"></i></button>
-                  </td>
-                </tr>
-                <tr id="prod-row-2">
-                  <td>2</td>
-                  <td class="fw-bold prod-name">Lámpara de Burbujas Calmante</td>
-                  <td class="prod-price">$24.990</td>
-                  <td class="fw-bold prod-stock text-warning">3 un.</td>
-                  <td><span class="badge bg-warning text-dark prod-status-badge">Stock Bajo</span></td>
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-primary me-1 btn-edit-prod" data-id="prod-row-2" title="Editar"><i class="bi bi-pencil-fill"></i></button>
-                    <button class="btn btn-sm btn-warning me-1 text-dark btn-toggle-prod" data-id="prod-row-2" title="Desactivar/Activar"><i class="bi bi-power"></i></button>
-                    <button class="btn btn-sm btn-outline-danger btn-delete-prod" data-id="prod-row-2" title="Eliminar"><i class="bi bi-trash-fill"></i></button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody><!-- JS Dynamic --></tbody>
             </table>
           </div>
         </div>
@@ -182,35 +146,28 @@
       <!-- TAB 3: HISTORIAL DE PEDIDOS -->
       <div class="tab-pane fade" id="admin-pedidos">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-          <h5 class="fw-bold mb-3" style="color: var(--color-blue-dark);"><i class="bi bi-receipt-cutoff me-2"></i>Historial Global de Pedidos</h5>
+          <h5 class="fw-bold mb-3">Historial de Ventas Registradas</h5>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
-                <tr><th>ID Pedido</th><th>Cliente</th><th>Dirección</th><th>Total</th><th>Estado Pago</th></tr>
-              </thead>
-              <tbody>
                 <tr>
-                  <td><strong>#101</strong></td>
-                  <td>Juan Pérez</td>
-                  <td>Av. Providencia 1234, Concepción</td>
-                  <td class="fw-bold" style="color: var(--color-blue-dark);">$17.480</td>
-                  <td><span class="badge bg-success">Aprobado</span></td>
+                  <th>ID Pedido</th>
+                  <th>Cliente</th>
+                  <th>Detalle</th>
+                  <th>Total</th>
+                  <th>Estado</th>
                 </tr>
-              </tbody>
+              </thead>
+              <tbody><!-- JS Dynamic --></tbody>
             </table>
           </div>
         </div>
       </div>
 
-<!-- TAB 4: GESTIÓN DE USUARIOS (Sin botón de Agregar) -->
+      <!-- TAB 4: GESTIÓN DE USUARIOS (SIN BOTÓN DE AGREGAR) -->
       <div class="tab-pane fade" id="admin-usuarios">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0" style="color: var(--color-blue-dark);">
-              <i class="bi bi-people-fill me-2" style="color: var(--color-blue-light);"></i>Gestión de Usuarios Registrados
-            </h5>
-            <!-- Botón de "Agregar Usuario" eliminado lógicamente -->
-          </div>
+          <h5 class="fw-bold mb-3">Usuarios Registrados</h5>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="usersTable">
               <thead class="table-light">
@@ -222,9 +179,7 @@
                   <th class="text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Se llena dinámicamente desde app.js -->
-              </tbody>
+              <tbody><!-- JS Dynamic --></tbody>
             </table>
           </div>
         </div>
@@ -233,92 +188,38 @@
     </div>
   </main>
 
-  <!-- MODAL PRODUCTO -->
+  <!-- MODAL EDITAR/AGREGAR PRODUCTO -->
   <div class="modal fade" id="productModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-4 border-0 shadow">
-        <div class="modal-header border-bottom">
-          <h5 class="modal-title fw-bold" style="color: var(--color-blue-dark);" id="modalProductTitle">Gestión de Producto</h5>
+      <div class="modal-content border-0 shadow rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="modalProductTitle">Producto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
           <form id="productForm">
             <input type="hidden" id="editProdRowId">
             <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre del Producto</label>
+              <label class="form-label small fw-semibold">Nombre del Producto</label>
               <input type="text" class="form-control" id="editProdName" required>
             </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Precio ($ CLP)</label>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Precio ($)</label>
                 <input type="number" class="form-control" id="editProdPrice" required>
               </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Stock Unidades</label>
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Stock Inicial</label>
                 <input type="number" class="form-control" id="editProdStock" required>
               </div>
             </div>
+            <button type="button" class="btn btn-orange w-100 fw-bold" id="btn-save-product">Guardar Cambios</button>
           </form>
-        </div>
-        <div class="modal-footer border-top">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-orange text-white fw-bold px-4" id="btn-save-product">Guardar Producto</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL USUARIO -->
-  <div class="modal fade" id="userEditModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-4 border-0 shadow">
-        <div class="modal-header border-bottom">
-          <h5 class="modal-title fw-bold" style="color: var(--color-blue-dark);" id="modalUserTitle">Gestión de Usuario</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4">
-          <form id="userForm">
-            <input type="hidden" id="editRowId">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre Completo</label>
-              <input type="text" class="form-control" id="editName" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">RUT</label>
-              <input type="text" class="form-control" id="editRut" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Correo Electrónico</label>
-              <input type="email" class="form-control" id="editEmail" required>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Rol</label>
-                <select class="form-select" id="editRole">
-                  <option value="Cliente">Cliente</option>
-                  <option value="Administrador">Administrador</option>
-                </select>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Estado</label>
-                <select class="form-select" id="editStatus">
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer border-top">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-orange text-white fw-bold px-4" id="btn-save-user">Guardar Cambios</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LIBRERÍAS Y SCRIPT COMPLETO EXTERNO -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/app.js"></script>
 </body>

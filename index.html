@@ -7,47 +7,51 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Enlaces CSS a tu proyecto -->
-  <link rel="stylesheet" href="css/miestilo.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/miestilo.css">
 </head>
 <body>
 
-  <!-- NAVBAR CON AZUL OSCURO (#16498C) Y LOGO AMARILLO (#F2EA79) -->
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <!-- NAVBAR RESPONSIVO Y CORREGIDO -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--color-blue-dark, #16498C);">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <i class="bi bi-balloon-heart-fill me-2"></i>SensoriToys
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="bi bi-balloon-heart-fill me-2" style="color: var(--color-yellow, #F2EA79);"></i>SensoriToys
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>      
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link active" href="index.html">Catálogo</a></li>
           <li class="nav-item"><a class="nav-link" href="pedidos.html">Mis Pedidos</a></li>
           <li class="nav-item"><a class="nav-link" href="reclamos.html">Reclamos y Reembolsos</a></li>
         </ul>
-        <div class="d-flex align-items-center gap-3">
-          <div class="input-group input-group-sm">
+        
+        <!-- CONTROLES DEL NAVBAR (CARRITO Y PERFIL ALINEADOS HORIZONTALMENTE) -->
+        <div class="d-flex align-items-center gap-3 my-2 my-lg-0 flex-wrap flex-lg-nowrap">
+          <div class="input-group input-group-sm me-lg-2" style="max-width: 250px;">
             <input type="text" class="form-control" placeholder="Buscar juguete...">
             <button class="btn btn-blue-light" type="button"><i class="bi bi-search"></i></button>
           </div>
-          <!-- CARRITO -->
-          <a href="carrito.html" class="btn btn-orange position-relative px-3">
-            <i class="bi bi-cart3 fs-5"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
-          </a>
-          <!-- ICONO DE USUARIO CIRCULAR -->
-          <a href="login.html" class="btn-user-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Iniciar Sesión / Registro">
-            <i class="bi bi-person-fill fs-5"></i>
-          </a>
+          
+          <div class="d-flex align-items-center gap-2">
+            <!-- CARRITO -->
+            <a href="carrito.html" class="btn btn-orange position-relative px-3">
+              <i class="bi bi-cart3 fs-6"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">1</span>
+            </a>
+            <!-- ICONO USUARIO -->
+            <a href="login.html" class="btn-user-icon text-decoration-none">
+              <i class="bi bi-person-fill fs-5"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- BANNER CON PROMO -->
+  <!-- BANNER PROMO CON TEXTOS VISIBLES EN MÓVIL -->
   <section class="container py-3">
     <div id="promoCarousel" class="carousel slide shadow rounded-4 overflow-hidden" data-bs-ride="carousel">
       <div class="carousel-indicators">
@@ -59,25 +63,25 @@
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="4000">
           <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=1200&h=400&fit=crop" class="d-block w-100 banner-img" alt="Promoción">
-          <div class="carousel-caption d-none d-md-block p-3">
-            <h2 class="fw-bold">¡20% de Descuento en Línea Táctil!</h2>
-            <p class="mb-0 text-white">Aprovecha nuestras ofertas especiales de la semana en mordedores y texturas.</p>
+          <div class="carousel-caption p-2">
+            <h2 class="fw-bold text-white">¡20% de Descuento en Línea Táctil!</h2>
+            <p class="mb-0 text-white">Ofertas especiales en mordedores y texturas.</p>
           </div>
         </div>
 
         <div class="carousel-item" data-bs-interval="4000">
           <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&h=400&fit=crop" class="d-block w-100 banner-img" alt="Lámpara">
-          <div class="carousel-caption d-none d-md-block p-3">
-            <h2 class="fw-bold">Nuevo Lanzamiento Visual</h2>
-            <p class="mb-0 text-white">Lámparas de burbujas autorreguladoras para tu espacio de calma.</p>
+          <div class="carousel-caption p-2">
+            <h2 class="fw-bold text-white">Nuevo Lanzamiento Visual</h2>
+            <p class="mb-0 text-white">Lámparas de burbujas autorreguladoras.</p>
           </div>
         </div>
 
         <div class="carousel-item" data-bs-interval="4000">
           <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=1200&h=400&fit=crop" class="d-block w-100 banner-img" alt="Envío Gratis">
-          <div class="carousel-caption d-none d-md-block p-3">
-            <h2 class="fw-bold">Envío Gratis sobre $30.000</h2>
-            <p class="mb-0 text-white">Despacho a todo Chile en comunas seleccionadas.</p>
+          <div class="carousel-caption p-2">
+            <h2 class="fw-bold text-white">Envío Gratis sobre $30.000</h2>
+            <p class="mb-0 text-white">Despacho a todo Chile.</p>
           </div>
         </div>
       </div>
@@ -93,18 +97,18 @@
 
   <!-- CATÁLOGO PRINCIPAL -->
   <section class="container py-3">
-    <div class="p-4 mb-4 rounded-4 bg-sensory text-white shadow-sm">
-      <h1 class="display-6 fw-bold mb-2 text-white">Juguetes Sensoriales para el Desarrollo y Calma</h1>
-      <p class="mb-0 lead fs-6">Diseñados especialmente para la estimulación táctil, auditiva y autorregulación emocional.</p>
+    <div class="p-3 p-md-4 mb-4 rounded-4 bg-sensory text-white shadow-sm">
+      <h1 class="h3 fw-bold mb-2 text-white">Juguetes Sensoriales para el Desarrollo y Calma</h1>
+      <p class="mb-0 small fs-md-6">Diseñados para la estimulación táctil, auditiva y autorregulación emocional.</p>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
       <!-- FILTROS SIDEBAR -->
-      <div class="col-md-3 mb-4">
+      <div class="col-12 col-lg-3">
         <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
           <h5 class="fw-bold mb-3"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filtros</h5>
-          <form>
-            <div class="mb-3">
+          <form class="row g-2">
+            <div class="col-12 col-sm-6 col-lg-12">
               <label class="form-label fw-semibold small">Categoría</label>
               <select class="form-select form-select-sm">
                 <option>Todas las categorías</option>
@@ -113,7 +117,7 @@
                 <option>Motricidad Fina</option>
               </select>
             </div>
-            <div class="mb-3">
+            <div class="col-12 col-sm-6 col-lg-12">
               <label class="form-label fw-semibold small">Edad Recomendada</label>
               <select class="form-select form-select-sm">
                 <option>Todas las edades</option>
@@ -122,31 +126,30 @@
                 <option>6 años o más</option>
               </select>
             </div>
-            <button type="reset" class="btn btn-sm btn-blue-light w-100">Limpiar Filtros</button>
+            <div class="col-12 mt-3">
+              <button type="reset" class="btn btn-sm btn-blue-light w-100">Limpiar Filtros</button>
+            </div>
           </form>
         </div>
       </div>
 
-      <!-- PRODUCTOS SINCRO-NIZADOS DESDE JS -->
-      <div class="col-md-9">
-        <div class="row g-4">
+      <!-- GRILLA DE PRODUCTOS RESPONSIVA (5 PRODUCTOS) -->
+      <div class="col-12 col-lg-9">
+        <div class="row g-3 g-md-4">
           
-          <!-- TARJETA PRODUCTO 1: ID store-prod-1 -->
-          <div class="col-md-4">
+          <!-- PRODUCTO 1 -->
+          <div class="col-12 col-sm-6 col-md-4">
             <div class="card card-product h-100 p-3" id="store-prod-1">
-              <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400" class="rounded-3 img-fluid mb-2" alt="Mordedor Silicona">
+              <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500&h=500&fit=crop" class="rounded-3 img-fluid mb-2 store-prod-img" alt="Mordedor Silicona">
               <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <h6 class="fw-bold mb-0">Mordedor Sensorial Silicona</h6>
-                  <!-- CONTENEDOR DE BADGE PARA DINAMISMO -->
+                  <h6 class="fw-bold mb-0">Mordedor Sensorial</h6>
                   <div class="stock-badge-container">
                     <span class="badge bg-success">Disponible (10)</span>
                   </div>
                 </div>
-                <small class="text-muted mb-2">Categoría: Táctil | Edad: 0-3</small>
-                
+                <small class="text-muted mb-2">Categoría: Táctil</small>
                 <p class="price-tag mt-auto mb-3">$6.990</p>
-                
                 <div class="d-flex gap-2">
                   <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
                   <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
@@ -155,22 +158,82 @@
             </div>
           </div>
 
-          <!-- TARJETA PRODUCTO 2: ID store-prod-2 -->
-          <div class="col-md-4">
+          <!-- PRODUCTO 2 -->
+          <div class="col-12 col-sm-6 col-md-4">
             <div class="card card-product h-100 p-3" id="store-prod-2">
-              <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400" class="rounded-3 img-fluid mb-2" alt="Lámpara Burbujas">
+              <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=500&h=500&fit=crop" class="rounded-3 img-fluid mb-2 store-prod-img" alt="Lámpara Burbujas">
               <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <h6 class="fw-bold mb-0">Lámpara de Burbujas Calmante</h6>
-                  <!-- CONTENEDOR DE BADGE PARA DINAMISMO -->
+                  <h6 class="fw-bold mb-0">Lámpara Burbujas</h6>
                   <div class="stock-badge-container">
                     <span class="badge bg-warning text-dark">Bajo Stock (3)</span>
                   </div>
                 </div>
-                <small class="text-muted mb-2">Categoría: Visual | Edad: 3-6</small>
-                
+                <small class="text-muted mb-2">Categoría: Visual</small>
                 <p class="price-tag mt-auto mb-3">$24.990</p>
-                
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
+                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTO 3 -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card card-product h-100 p-3" id="store-prod-3">
+              <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500&h=500&fit=crop" class="rounded-3 img-fluid mb-2 store-prod-img" alt="Squishy Conejo">
+              <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <h6 class="fw-bold mb-0">Squishy Conejo</h6>
+                  <div class="stock-badge-container">
+                    <span class="badge bg-success">Disponible (15)</span>
+                  </div>
+                </div>
+                <small class="text-muted mb-2">Categoría: Táctil</small>
+                <p class="price-tag mt-auto mb-3">$4.990</p>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
+                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTO 4 -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card card-product h-100 p-3" id="store-prod-4">
+              <img src="https://images.unsplash.com/photo-1559715745-e1b34a25e88f?w=500&h=500&fit=crop" class="rounded-3 img-fluid mb-2 store-prod-img" alt="Squishy Pato">
+              <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <h6 class="fw-bold mb-0">Squishy Pato</h6>
+                  <div class="stock-badge-container">
+                    <span class="badge bg-success">Disponible (8)</span>
+                  </div>
+                </div>
+                <small class="text-muted mb-2">Categoría: Táctil</small>
+                <p class="price-tag mt-auto mb-3">$4.990</p>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
+                  <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTO 5 -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card card-product h-100 p-3" id="store-prod-5">
+              <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&h=500&fit=crop" class="rounded-3 img-fluid mb-2 store-prod-img" alt="Squishy Rana">
+              <div class="card-body d-flex flex-column px-0 pb-0 pt-2">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <h6 class="fw-bold mb-0">Squishy Rana</h6>
+                  <div class="stock-badge-container">
+                    <span class="badge bg-warning text-dark">Bajo Stock (5)</span>
+                  </div>
+                </div>
+                <small class="text-muted mb-2">Categoría: Motricidad</small>
+                <p class="price-tag mt-auto mb-3">$5.490</p>
                 <div class="d-flex gap-2">
                   <button class="btn btn-sm btn-blue-light w-50" data-bs-toggle="modal" data-bs-target="#detailModal">Detalle</button>
                   <a href="carrito.html" class="btn btn-sm btn-orange w-50 text-center text-decoration-none btn-agregar">Agregar</a>
@@ -184,7 +247,7 @@
     </div>
   </section>
 
-  <!-- MODAL -->
+  <!-- MODAL DE DETALLE -->
   <div class="modal fade" id="detailModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 border-0 overflow-hidden shadow">

@@ -190,3 +190,126 @@ h1, h2, h3, h4, h5, h6 {
 .form-select.is-valid {
   border-color: #10B981 !important;
 }
+/* ==========================================================================
+   AJUSTES RESPONSIVOS (MOBILE FIRST)
+   ========================================================================== */
+
+/* 1. Carrusel visible y legible en pantallas pequeñas */
+.carousel-caption {
+  background: rgba(22, 73, 140, 0.75); /* Fondo semitransparente azul */
+  border-radius: 12px;
+  padding: 10px 15px !important;
+  bottom: 15px;
+}
+
+.carousel-caption h2 {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.carousel-caption p {
+  font-size: 0.8rem;
+}
+
+.banner-img {
+  height: 220px;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .banner-img {
+    height: 350px;
+  }
+  .carousel-caption h2 {
+    font-size: 1.8rem;
+  }
+  .carousel-caption p {
+    font-size: 1rem;
+  }
+}
+
+/* 2. Ajuste del Navbar móvil sin deformaciones */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .nav-user-controls {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+    margin-top: 0.75rem;
+  }
+  
+  .nav-user-controls .input-group {
+    width: 100%;
+  }
+
+  .nav-user-controls .user-cart-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
+/* ==========================================================================
+   REGLAS RESPONSIVAS Y ALINEACIÓN DE NAVBAR
+   ========================================================================== */
+
+/* Forzar alineación horizontal estricta del carrito y el perfil */
+.navbar .d-flex {
+  align-items: center !important;
+}
+
+.store-prod-img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Ajustes para pantalla de dispositivos móviles */
+.carousel-caption {
+  background: rgba(22, 73, 140, 0.75);
+  border-radius: 12px;
+  padding: 10px 15px !important;
+  bottom: 15px;
+}
+
+.carousel-caption h2 {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.carousel-caption p {
+  font-size: 0.8rem;
+}
+
+.banner-img {
+  height: 220px;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .banner-img {
+    height: 350px;
+  }
+  .carousel-caption h2 {
+    font-size: 1.8rem;
+  }
+  .carousel-caption p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    padding-top: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .navbar .input-group {
+    max-width: 100% !important;
+    width: 100%;
+  }
+}
